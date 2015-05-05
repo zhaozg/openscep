@@ -11,15 +11,22 @@
 #include <scep.h>
 #include <init.h>
 #include <sys/types.h>
+#ifndef WIN32
 #include <sys/socket.h>
 #include <netdb.h>
+#else
+#include <winsock2.h>
+#endif
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <openssl/err.h>
+#ifndef WIN32
 #include <arpa/inet.h>
-
+#else
+#include <winsock2.h>
+#endif
 /*
  * parse the url given in the second argument and fill in the h member
  * of the scep structure

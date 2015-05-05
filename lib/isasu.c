@@ -39,8 +39,8 @@ issuer_and_subject_t	*d2i_issuer_and_subject(issuer_and_subject_t **a,
 	M_ASN1_D2I_start_sequence();
 	M_ASN1_D2I_get(ret->issuer, d2i_X509_NAME);
 	M_ASN1_D2I_get(ret->subject, d2i_X509_NAME);
-	M_ASN1_D2I_Finish(a,issuer_and_subject_free,
-		ASN1_F_D2I_PKCS7_ISSUER_AND_SERIAL);
+  M_ASN1_D2I_Finish(a, issuer_and_subject_free,
+    -1); //ASN1_F_D2I_PKCS7_ISSUER_AND_SERIAL);
 }
 
 issuer_and_subject_t	*issuer_and_subject_new(void) {
@@ -50,7 +50,9 @@ issuer_and_subject_t	*issuer_and_subject_new(void) {
 	M_ASN1_New(ret->issuer, X509_NAME_new);
 	M_ASN1_New(ret->subject, X509_NAME_new);
 	return ret;
-	M_ASN1_New_Error(ASN1_F_PKCS7_ISSUER_AND_SERIAL_NEW); /* wrong error code */
+  M_ASN1_New_Error(-1); /* wrong error code */
+	//M_ASN1_New_Error(ASN1_F_PKCS7_ISSUER_AND_SERIAL_NEW); /* wrong error code */
+
 }
 
 void	issuer_and_subject_free(issuer_and_subject_t *isasu) {

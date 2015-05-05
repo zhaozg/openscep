@@ -13,6 +13,7 @@
 #include <openssl/asn1.h>
 #include <openssl/pkcs7.h>
 #include <isasu.h>
+#include <scep.h>
 
 extern char		*x509_to_ldap(scep_t *scep, X509_NAME *name);
 extern X509_NAME	*ldap_to_x509(char *dn);

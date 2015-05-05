@@ -9,7 +9,11 @@
 #include <grant.h>
 #include <init.h>
 #include <sys/types.h>
+#ifndef WIN32
 #include <sys/wait.h>
+#else
+#include <process.h>
+#endif
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
@@ -23,6 +27,7 @@
  */
 int	cert_grant(scep_t *scep) {
 	char	*cmd;
+#if 0
 	int	st;
 	pid_t	pid;
 
@@ -86,7 +91,7 @@ int	cert_grant(scep_t *scep) {
 		exit(EXIT_FAILURE);
 	}
 	return 0;
-
+#endif 
 err:
 	syslog(LOG_ERR, "%s:%d: granting certificate failed", __FILE__,
 		__LINE__);

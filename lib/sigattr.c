@@ -146,7 +146,7 @@ ASN1_OCTET_STRING	*sigattr_asn1_octet(scep_t *scep, char *attrname) {
 	for (i = 0; i < sk_X509_ATTRIBUTE_num(sig_attribs); i++) {
 		attr = sk_X509_ATTRIBUTE_value(sig_attribs, i);
 		if (OBJ_cmp(attr->object, asn1_obj) == 0) {
-			if ((!attr->set) || (sk_ASN1_TYPE_num(attr->value.set)
+			if ((!attr->value.set) || (sk_ASN1_TYPE_num(attr->value.set)
 				== 0)) {
 				BIO_printf(bio_err, "%s:%d: attr has no val\n",
 					__FILE__, __LINE__);

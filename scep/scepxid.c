@@ -27,7 +27,7 @@ int	main(int argc, char *argv[]) {
 	char		*reqfile = NULL, *fp;
 	BIO		*bio;
 	X509_REQ	*req;
-	EVP_PKEY	*pkey;
+	EVP_PKEY	*pkey = NULL;
 	int		netscape = 0;
 	NETSCAPE_SPKI	*spki = NULL;
 

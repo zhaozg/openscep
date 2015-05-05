@@ -68,7 +68,11 @@ payload_t	*payload_new() {
 	p->rt = -1;
 	p->od.req = NULL;
 	return p;
-	M_ASN1_New_Error(ASN1_F_X509_REQ_INFO_NEW);	/* wrong error code */
+  M_ASN1_New_Error(-1);
+  /*
+	M_ASN1_New_Error(ASN1_F_X509_REQ_INFO_NEW);	
+  */
+  /* wrong error code */
 }
 
 void	payload_free(payload_t *a) {
@@ -171,7 +175,8 @@ payload_t	*d2i_payload(payload_t **a, unsigned char **pp, long length) {
 		ret->od.spki = d2i_NETSCAPE_SPKI(&r2, &u, l);
 		break;
 	}
-	M_ASN1_D2I_Finish(a, payload_free, ASN1_F_D2I_X509_REQ_INFO);
+  M_ASN1_D2I_Finish(a, payload_free, -1);
+	//M_ASN1_D2I_Finish(a, payload_free, ASN1_F_D2I_X509_REQ_INFO);
 }
 
 /*

@@ -8,6 +8,10 @@
 #ifndef _FINGERPRINT_H
 #define _FINGERPRINT_H
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <openssl/x509.h>
 
 extern int	fingerprint_cmp(const char *f1, const char *f2);

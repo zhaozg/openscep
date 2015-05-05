@@ -17,6 +17,11 @@
 #include <lber.h>
 #include <ldap.h>
 #include <payload.h>
+#if OPENSSL_VERSION_NUMBER >= 0x10000000L
+#include <openssl/lhash.h>
+#define OPENSSL_HAVE_TS
+#define LHASH LHASH_OF(CONF_VALUE)
+#endif
 
 #define	FORMAT_ASN1	1
 #define	FORMAT_PEM	3
