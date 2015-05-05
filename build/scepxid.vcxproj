@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{06DFE369-AC4C-4B9C-890A-ED09AF730047}</ProjectGuid>
+    <RootNamespace>openscep</RootNamespace>
+    <ProjectName>scepidx</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>..\include;\work\openssl\1.0.2\include;..\build</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_MBCS;WIN32_LEAN_AND_MEAN;LTDL_OBJDIR=".";OPENSCEPDIR=".";HAVE_CONFIG_H;WIN32;snprintf=_snprintf;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>ws2_32.lib;Wldap32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\libltdl\ltdl.c" />
+    <ClCompile Include="..\lib\attr.c" />
+    <ClCompile Include="..\lib\badreply.c" />
+    <ClCompile Include="..\lib\certrep.c" />
+    <ClCompile Include="..\lib\check.c" />
+    <ClCompile Include="..\lib\createreq.c" />
+    <ClCompile Include="..\lib\decode.c" />
+    <ClCompile Include="..\lib\encode.c" />
+    <ClCompile Include="..\lib\fingerprint.c" />
+    <ClCompile Include="..\lib\getcert.c" />
+    <ClCompile Include="..\lib\getcertinitial.c" />
+    <ClCompile Include="..\lib\getcrl.c" />
+    <ClCompile Include="..\lib\goodreply.c" />
+    <ClCompile Include="..\lib\grant.c" />
+    <ClCompile Include="..\lib\http.c" />
+    <ClCompile Include="..\lib\init.c" />
+    <ClCompile Include="..\lib\isasu.c" />
+    <ClCompile Include="..\lib\iser.c" />
+    <ClCompile Include="..\lib\openscep_vers.c" />
+    <ClCompile Include="..\lib\payload.c" />
+    <ClCompile Include="..\lib\pending.c" />
+    <ClCompile Include="..\lib\pkcsreq.c" />
+    <ClCompile Include="..\lib\proxy.c" />
+    <ClCompile Include="..\lib\scepldap.c" />
+    <ClCompile Include="..\lib\selfsigned.c" />
+    <ClCompile Include="..\lib\sigattr.c" />
+    <ClCompile Include="..\lib\spki2file.c" />
+    <ClCompile Include="..\lib\transcheck.c" />
+    <ClCompile Include="..\lib\v2request.c" />
+    <ClCompile Include="..\scep\scepxid.c" />
+    <ClCompile Include="getopt.c" />
+    <ClCompile Include="syslog-client.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\lib\Makefile.am" />
+    <None Include="..\lib\Makefile.in" />
+    <None Include="..\lib\README" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\libltdl\acconfig.h" />
+    <ClInclude Include="..\libltdl\ltdl.h" />
+    <ClInclude Include="syslog.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="lib\libeay32.lib" />
+    <Library Include="lib\ssleay32.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
