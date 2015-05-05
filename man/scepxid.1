@@ -1,0 +1,23 @@
+.\"
+.\" $(#) $Id: scepxid.1.in,v 1.1 2001/03/25 16:49:46 afm Exp $
+.\"
+.TH SCEPXID 8 "02/24/02" "OpenSCEP"
+.SH NAME
+scepxid \- compute the transaction id belonging to some RSA public key
+.SH SYNOPSYS
+.B scepxid
+.I keyfile
+.SH DESCRIPTION
+.B Scepxid
+reads the RSA public from the 
+.I keyfile
+and computes the SCEP transaction id associated with the key.
+See the SCEP draft specification
+.I draft-nourse-scep-04.txt 
+for details about the computation of the transaction id.
+.SH VERSION
+This page documents 
+.B scepconf
+as it appears in version 0.4.1 of OpenSCEP.
+.SH AUTHOR
+Andreas F. Mueller <andreas.mueller@othello.ch>

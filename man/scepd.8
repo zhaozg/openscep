@@ -1,0 +1,63 @@
+.TH scepd 8 "02/24/02" "OpenSCEP"
+.SH NAME
+scepd \- handle SCEP request
+.SH SYNOPSIS
+.B scepd
+[
+.B \-d
+]
+[
+.BI \-f configfile
+]
+.SH DESCRIPTION
+.B Scepd
+is usually called from a CGI script and is designed to read a base64
+encoded SCEP request from standard input.
+It will analyze the request and store it in the pending directory of
+the OpenSCEP CA directory hierarchy.
+If automatic enrollment is enabled, the challenge password of the
+request will be checked against the LDAP directory and automatically
+granted if the password matches. Otherwise the request is left in
+the pending queue until the CA operator uses the
+.B scepgrant
+script to create the certificate, or the
+.B scepreject
+script to deny the certificate.
+
+.SH OPTIONS
+.TP
+.B \-d 
+increase the debug level by one.
+.TP
+.BI \-f configfile
+use the alternate configuration file 
+.I configfile
+in place of the default 
+.IR /usr/local/openscep/openscep.cnf .
+
+.SH FILES
+By default, 
+.B scepd
+takes
+.I /usr/local/openscep/openscep.cnf
+as configuration file. If debugging is enabled, and the directory
+.I /var/tmp/openscep
+exists, requests and the various stages of enveloped and signed data
+are written to files in that directory. Using 
+.BR derdump (1),
+the parts can be individually analyzed, which can be helpful when
+debugging SCEP problems.
+
+.SH VERSION
+This page documents
+.B scepd
+as it appears in version 0.4.1 of OpenSCEP.
+
+.SH SEE ALSO
+.BR scepgrant (8),
+.BR scepreject (8),
+.BR openscep.cnf (5)
+
+.SH AUTHOR
+Andreas F. Mueller <andreas.mueller@othello.ch>
+

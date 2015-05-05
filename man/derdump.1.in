@@ -1,0 +1,48 @@
+.TH derdump 1 "DaTe" "OpenSCEP"
+.SH NAME
+derdump \- dump a DER structure to stdout
+.SH SYNOPSIS
+.B derdump
+[
+.B \-bdihpV
+]
+[
+.B filename
+]
+.SH DESCRIPTION
+.B Derdump
+dumps a DER structure read from a file or, if none is specified,
+from standard input to standard output. 
+It is mainly intended as a debugging tool.
+.SH OPTIONS
+.TP
+.B \-b
+assume the data feed to
+.B derdump
+is Base64 encoded. Note however that for PEM data you should rather use
+the 
+.B \-p
+option described below.
+.TP
+.B \-d
+increase the debug level by one. There aren't really that many debug
+messages available in derdump...
+.TP
+.B \-h
+display a help message explaining the options available and exit.
+.TP
+.B \-i
+suppress indentation of the various substructures, which will reduce
+readability but may be necessary for some post processors.
+.TP
+.B \-V
+display the version of OpenSCEP used.
+
+.SH VERSION
+This page documents
+.B derdump
+as it appears in version VeRsIoN of OpenSCEP.
+
+.SH AUTHOR
+Andreas F. Mueller <andreas.mueller@othello.ch>
+

@@ -1,0 +1,35 @@
+# 
+# slapd.conf openldap configuration for use with OpenSCEP
+#
+# (c) 2001 Dr. Andreas Meuller, Beratung und Entwicklung
+#
+# $Id: slapd.conf.in,v 1.2 2002/01/11 08:22:44 afm Exp $
+#
+include		/usr/local/etc/openldap/schema/core.schema
+include		/usr/local/etc/openldap/schema/cosine.schema
+include		/usr/local/etc/openldap/schema/inetorgperson.schema
+include		/usr/local/etc/openldap/schema/nis.schema
+include		OPENSCEPDIR/openscep.schema
+
+# Define global ACLs to disable default read access.
+
+pidfile		OPENSCEPDIR/ldbm/slapd.pid
+argsfile	OPENSCEPDIR/ldbm/slapd.args
+
+#######################################################################
+# ldbm database definitions
+#######################################################################
+
+database	ldbm
+suffix		"O=othello,C=CH"
+rootdn		"cn=root,O=othello,C=CH"
+# Cleartext passwords, especially for the rootdn, should
+# be avoid.  See slappasswd(8) and slapd.conf(5) for details.
+# Use of strong authentication encouraged.
+rootpw		secret
+# The database directory MUST exist prior to running slapd AND 
+# should only be accessable by the slapd/tools. Mode 700 recommended.
+directory	OPENSCEPDIR/ldbm
+# Indices to maintain
+index	objectClass	eq
+lastmod on

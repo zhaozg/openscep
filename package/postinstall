@@ -1,0 +1,34 @@
+#! /bin/sh
+#
+# (c) 2001 Dr. Andreas Mueller, Beratung und Entwicklung
+#
+# $Id: postinstall,v 1.4 2001/04/05 00:40:04 afm Exp $
+#
+
+#
+# edit the openscepsetup script to use the user and group given to the
+# request script
+#
+echo setting user to ${OWNER} and group to ${GROUP}
+/usr/bin/ed /usr/local/sbin/openscepsetup <<EOF
+1,\$s/nobody/${OWNER}/g
+1,\$s/nogroup/${GROUP}/g
+w
+q
+EOF
+
+#
+# inform the user about what he has to next
+#
+cat <<EOF
+Installation of OpenSCEP complete. Please copy
+
+	/usr/local/lib/openscep/openscep.cnf.dist
+
+to
+
+	/usr/local/lib/openscep/openscep.cnf
+
+and edit it to match your site. Then run /usr/local/sbin/openscepsetup
+to create your OpenSCEP Certification Authority.
+EOF

@@ -1,0 +1,23 @@
+This directory contains supporting files for the LDAP Backend of the
+OpenSCEP server.
+
+openscep.schema	attribute type and object class definitions required for
+		OpenSCEP
+
+openscep.ldif	basic DIT used to store OpenSCEP information. Appart from
+		the tree layout and the definition of the CA, this LDIF
+		contains two predefined nodes, one with and one without a
+		userPassword attribute. This is to show how automatic and
+		manual SCEP clients work.
+
+To set up an OpenLDAP 2.0.7 server for use with OpenSCEP, make sure the
+main configuration file includes openscep.schema before starting the
+server. Then add nodes described in openscep.ldif with any method you
+like.
+
+For development purposes, there is a sample slapd.conf file and some
+supporting targets in the Makefile to help set up an LDAP directory with
+all the correct data. Please read the Makefile.am for details.
+
+--
+$Id: README,v 1.2 2001/12/17 11:13:22 afm Exp $

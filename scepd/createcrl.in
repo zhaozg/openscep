@@ -1,0 +1,50 @@
+#! /bin/sh
+#
+# create a new CRL, or recreate the current CRL and write it to the
+# directory. use updatecrl to revoke a certificate based on the
+# transaction id
+#
+# (c) 2001 Dr. Andreas Mueller, Beratung und Entwicklung
+#
+# $Id: createcrl.in,v 1.4 2001/04/04 23:36:40 afm Exp $
+#
+openscepdir=OPENSCEPDIR
+crlfile=${openscepdir}/crl.der
+scepconf=BINDIR/scepconf
+crl2ldap=SBINDIR/crl2ldap
+openssl=`${scepconf} scepd openssl`
+
+${openssl} ca -config ${openscepdir}/openscep.cnf			\
+	-cert ${openscepdir}/cacert.pem 				\
+	-keyfile ${openscepdir}/cakey.pem				\
+	-out ${openscepdir}/crl.pem					\
+	-batch -gencrl -policy policy_unstructured
+if [ $? -gt 0 ]
+then
+	echo crl creation failed >&2
+	exit 1
+fi
+
+# convert the crl to DER format
+${openssl} crl -in ${openscepdir}/crl.pem 				\
+	-outform DER -out ${openscepdir}/crl.der
+if [ $? -gt 0 ]
+then
+	echo formatting CRL as DER failed >&2
+	exit 1;
+fi
+
+# update the entry in the directory (XXX assumes no blanks in ldapbase
+# and binddn)
+ldaphost=`${scepconf} ldap ldaphost`
+ldapport=`${scepconf} ldap ldapport`
+ldapbase=`${scepconf} ldap ldapbase`
+binddn=`${scepconf} ldap binddn`
+bindpw=`${scepconf} ldap bindpw`
+ldapmodify=`${scepconf} ldap ldapmodify`
+name=`${scepconf} scepd name`
+
+${crl2ldap} -h ${ldaphost} -p ${ldapport} 				\
+	-D "${binddn}" -w "${bindpw}" "CN=${name},${ldapbase}" <${crlfile}
+
+exit 0

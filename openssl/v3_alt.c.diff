@@ -1,0 +1,200 @@
+*** v3_alt.c	Sun Feb 25 22:23:22 2001
+--- v3_alt.c.orig	Sun Feb 25 21:26:10 2001
+***************
+*** 57,63 ****
+   */
+  
+  #include <stdio.h>
+- #include <ctype.h>
+  #include "cryptlib.h"
+  #include <openssl/conf.h>
+  #include <openssl/x509v3.h>
+--- 57,62 ----
+***************
+*** 66,72 ****
+  static STACK_OF(GENERAL_NAME) *v2i_issuer_alt(X509V3_EXT_METHOD *method, X509V3_CTX *ctx, STACK_OF(CONF_VALUE) *nval);
+  static int copy_email(X509V3_CTX *ctx, STACK_OF(GENERAL_NAME) *gens);
+  static int copy_issuer(X509V3_CTX *ctx, STACK_OF(GENERAL_NAME) *gens);
+- static int rfc2253_to_x509_name(char *dn_string, X509_NAME **x509_name);
+  X509V3_EXT_METHOD v3_alt[] = {
+  { NID_subject_alt_name, 0,
+  (X509V3_EXT_NEW)GENERAL_NAMES_new,
+--- 65,70 ----
+***************
+*** 378,389 ****
+  			goto err;
+  	}
+  	type = GEN_IPADD;
+- } else if (!name_cmp(name, "DirName")) {
+- 	if (!rfc2253_to_x509_name(value, &(gen->d.dirn))) {
+- 		X509V3err(X509V3_F_V2I_GENERAL_NAME,ERR_R_MALLOC_FAILURE);
+- 		goto err;
+- 	}
+- 	type = GEN_DIRNAME;
+  } else {
+  	X509V3err(X509V3_F_V2I_GENERAL_NAME,X509V3_R_UNSUPPORTED_OPTION);
+  	ERR_add_error_data(2, "name=", name);
+--- 376,381 ----
+***************
+*** 406,565 ****
+  err:
+  GENERAL_NAME_free(gen);
+  return NULL;
+- }
+- 
+- /* the following conversion function is certainly not the last word on	*/
+- /* RFC2253, but it's a start. it is a reformatting of a function	*/
+- /* distributed with a patch to openosp					*/
+- static int	rfc2253_to_x509_name(char *dn_string, X509_NAME ** x509_name)
+- {
+- int rc = 0;
+- unsigned int parsed_ok = 0;
+- X509_NAME_ENTRY *entry = NULL;
+- char *str = NULL;
+- char *cc;
+- char *type;
+- char *value;
+- int rdn_flag_next = 0;
+- int rdn_flag_this;
+- int prev_set;
+- int new_set;
+- int ii;
+- int error;
+- 
+- /* Create the X509_NAME structure.					*/
+- *x509_name = X509_NAME_new ();
+- if (*x509_name == NULL) {
+- 	goto EXIT_LABEL;
+- }
+- 
+- /* Duplicate the string because we will be inserting nulls into it.	*/
+- str = OPENSSL_malloc(strlen (dn_string) + 1);
+- if (str == NULL) {
+- 	goto EXIT_LABEL;
+- }
+- strcpy (str, dn_string);
+- 
+- /* Search through the string, extracting each type/value pair and	*/
+- /* adding them to the X509_NAME structure.				*/
+- cc = str;
+- for (;;) {
+- 	/* Look for the start of an attributeType.			*/
+- 	while (isspace((int) *cc)) {
+- 		cc++;
+- 	}
+- 
+- 	/* Check that it's valid; remember where it starts if so.	*/
+- 	if (!isalpha((int) *cc)) {
+- 		break;
+- 	}
+- 	type = cc;
+- 	cc++;
+- 
+- 	/* Look for the end of the attributeType and insert nulls 	*/
+- 	/* until we find  an equals sign.				*/
+- 	while (isalpha((int) *cc) || isdigit((int) *cc) || (*cc == '-')) {
+- 		cc++;
+- 	}
+- 
+- 	if (*cc == 0) {
+- 		break;
+- 	}
+- 
+- 	while (isspace((int) *cc)) {
+- 		*cc = 0;
+- 		cc++;
+- 	}
+- 
+- 	if (*cc != '=') {
+- 		break;
+- 	}
+- 	*cc = 0;
+- 	cc++;
+- 
+- 	/* Look for the start of an attributeValue.  Note that we will	*/
+- 	/* fail to parse an attribute with nothing in it, eg 		*/
+- 	/* CN=,O=DCL,C=GB.						*/
+- 	while (isspace((int) *cc)) {
+- 		cc++;
+- 	}
+- 	value = cc;
+- 
+- 	/* Look for the end of the attributeValue and insert a null.	*/
+- 	/*  If that's the end of the string, set cc to null so that we 	*/
+- 	/* exit the loop after adding this last value.			*/
+- 	while (strchr (",;+", (int) *cc) == NULL) {
+- 		cc++;
+- 	}
+- 
+- 	rdn_flag_this = rdn_flag_next;
+- 	if (*cc == 0) {
+- 		cc = NULL;
+- 	} else {
+- 		/* Work out whether the next attributeType/Value pair 	*/
+- 		/* will be part of the same RDN ('+' separator) or a 	*/
+- 		/* new RDN (',' or ';' separator).			*/
+- 		if (*cc == '+') {
+- 			rdn_flag_next = -1;
+- 		} else {
+- 			rdn_flag_next = 0;
+- 		}
+- 
+- 		*cc = 0;
+- 		cc++;
+- 	}
+- 
+- 	/* Add the attribute to the X509_NAME structure.		*/
+- 	error = X509_NAME_add_entry_by_txt(*x509_name, type, MBSTRING_ASC,
+- 		(unsigned char *) value, -1, -1, rdn_flag_this);
+- 	if (error == 0) {
+- 		goto EXIT_LABEL;
+- 	}
+- 
+- 	if (cc == NULL) {
+- 		parsed_ok = 1;
+- 		break;
+- 	}
+- }
+- 
+- /* We've broken out of the loop.  If parsed_ok==0 or there are no entries  */
+- /* in the name structure, it's an error.                                   */
+- if ((parsed_ok == 0) || (X509_NAME_entry_count(*x509_name) == 0)) {
+- 	goto EXIT_LABEL;
+- }
+- 
+- /* Now reverse the order of the entries in the X509_NAME structure, so     */
+- /* that the ordering agrees with X.501 (i.e.  opposite to RFC2253).  We    */
+- /* can't construct the list of entries backwards in the first place,       */
+- /* because the logic in X509_NAME_add_entry() doesn't allow us to set up   */
+- /* 'set' correctly for each entry.                                         */
+- prev_set = -1;
+- new_set = -1;
+- for (ii = (X509_NAME_entry_count(*x509_name) - 1); ii >= 0; ii--) {
+- 	entry = sk_X509_NAME_ENTRY_delete((*x509_name)->entries, ii);
+- 	if (entry->set != prev_set) {
+- 		prev_set = entry->set;
+- 		new_set++;
+- 	}
+- 	entry->set = new_set;
+- 	sk_X509_NAME_ENTRY_push((*x509_name)->entries, entry);
+- }
+- 
+- rc = 1;
+- 
+- EXIT_LABEL:
+- 
+- if (!rc) {
+- 	if (*x509_name != NULL) {
+- 		X509_NAME_free(*x509_name);
+- 		*x509_name = NULL;
+- 	}
+- }
+- 
+- if (str != NULL) {
+- 	OPENSSL_free(str);
+- }
+- 
+- return (rc);
+- 
+  }
+--- 398,401 ----

@@ -1,0 +1,45 @@
+.TH dn2xid 8 "02/24/02" "OpenSCEP"
+.SH NAME
+dn2xid \- return the transaction ID given the distinguished name
+of a certificate
+.SH SYNOPSIS
+.B dn2xid
+[
+.B \-d
+] [
+.BI \-D binddn
+] [
+.BI \-w bindpassword
+] [
+.BI \-h ldaphost
+] [
+.BI \-p ldapport
+]
+.I distinguished-name
+.SH DESCRIPTION
+.B Dn2xid
+finds the transaction ID used when a certificate with a given
+.I distinguished-name
+was granted using SCEP. This program is mainly used in OpenSCEP
+CGI programs.
+.SH OPTIONS
+.TP
+.B \-d 
+increase the debug level by one.
+.TP
+.BI \-D binddn
+.TP
+.BI \-w bindpassword
+.TP
+.BI \-h ldaphost
+.TP
+.BI \-p ldapport
+
+.SH VERSION
+This page documents
+.B dn2xid
+as it appears in version 0.4.1 of OpenSCEP.
+
+.SH AUTHOR
+Andreas F. Mueller <andreas.mueller@othello.ch>
+

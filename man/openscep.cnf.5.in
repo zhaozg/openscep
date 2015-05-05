@@ -1,0 +1,170 @@
+.TH openscep.cnf 8 "DaTe" "OpenSCEP"
+.SH NAME
+openscep.cnf \- OpenSCEP configuration file
+.SH DESCRIPTION
+.B OpenSCEP
+uses the configuration file mechanism provided
+by OpenSSL for its own configuration.
+All the
+.B OpenSCEP
+utilities read the configurationfile
+.I OPENSCEPDIR/openscep.cnf
+where various sections describe parameters foreign to OpenSSL
+and only useful to
+.BR OpenSCEP .
+See the next sections for the
+configuration parameters specific to
+.BR OpenSCEP .
+
+.SH SECTIONS
+There are three main sections used by
+.BR OpenSCEP .
+The CA sections are more or less standard from OpenSSL.
+
+
+.SH CA DEFINITIONS
+See the OpenSSL documentation about details of the configuration
+of a CA.
+
+.SH SCEPD DEFINITIONS
+These are the options the control the behaviour of the 
+.BR scepd (8)
+programm from the
+.B OpenSCEP
+distribution.
+To keep the scripts that also use these variables simple, there are
+no defaults for them. All of them must be set, which is especially
+easy to do incorrectly when upgrading.
+
+.TP
+.BI "name = " CAname
+Name of this CA, used to find the right CA section during CA operations.
+
+.TP
+.BI "cacert = "
+Path to the PEM encoded CA certificate.
+
+.TP
+.BI "cakey = " /path/to/cakey.pem
+Path to the PEM encoded and unencrypted CA key.
+
+.TP
+.BI "crl = " /path/to/crl.pem
+Path to a PEM encoded certificate revokation list.
+
+.TP
+.BI "grantcmd = " /path/to/scepgrant
+Path to the
+.BR scepgrant (8)
+program. 
+
+.TP
+.BI "automatic = " {true|false}
+Specifies whether automatic enrollment is possible or not.
+
+.TP
+.BI "debug = " {true|false}
+Specifies whether debug output should be generated.
+
+.TP
+.BI "logfile = " /path/to/logfile
+Defines the log file. 
+.BR syslog (8)
+must be configured to direct log messages to this file.
+This variable influences only the CGI-program used to display the
+log file.
+
+.TP
+.BI "openssl = " /path/to/openssl/binary
+Sets the fully qualified path to the 
+.BR openssl (1)
+binary. Note that on many installations, 
+.BR openssl (1)
+is not on the path, and there is no easy way for a CGI program
+to find this program, hence the requirement that the path to it
+must be configured.
+
+.TP
+.BI "crlusers = " users
+This option allows to define a white space separated list of users 
+(as authenticated by the web server) which are allowed to
+perform certificate revocations without specifying the challenge
+password from the request.
+
+.TP
+.BI "crlpublic = " {true|false}
+If set to true, public access to certificate revocation is granted.
+Any user who knows the challenge password of a certificate request
+can revoke the corresponding certificate.
+Note that trusted users as defined in the
+.B crlusers
+variable are not required to give the challenge password, even
+if
+.B crlpublic
+is set to false.
+
+.SH LDAP SECTION
+In this section, all parameters needed to access the ldap directory
+are defined. There are no defaults for these values, they must all
+be set in the configuration file (this simplifies the code for the
+CGI programs a little bit).
+
+.TP
+.BI "ldaphost = " ldapservername
+Specifies the name of the LDAP server used as back end for the
+certificate data.
+
+.TP
+.BI "ldapport = " ldapserverport
+Specifies the TCP port number of the LDAP server used as back end for the
+certificate data.
+
+.TP
+.BI "ldapbase = " basedn
+The base distinguished name to be used by
+.BR OpenSCEP .
+
+.TP
+.BI "binddn = " binddn
+Some of the
+.B OpenSCEP
+programms need to update the directory, which
+requires additional privileges.
+They therefore use this distinguished name to bind to the directory,
+and the password as specified by the 
+.B bindpw
+variable (see below).
+
+.TP
+.BI "bindpw = " bindpw
+see 
+.BR binddn .
+
+.TP
+.BI "ldapmodify = " /path/to/ldapmodify
+Full path to the
+.BR ldapmodify (1)
+programm to be used to modify the directory. Note that a binary from
+the OpenLDAP version 2 distribution must be used, as the CGI
+scripts use some options only available in OpenLDAP.
+
+.TP
+.BI "ldapsearch = " /path/to/ldapsearch
+program to be used to read the directory, only used in the crl revocation
+program.
+
+.SH SEE ALSO
+The 
+.B OpenSCEP
+distribution comes with an example openscep.cnf file that one can use
+as a starting point when setting up a CA.
+
+.SH VERSION
+This page documents
+.B openscep.cnf
+as it appears in version VeRsIoN of
+.BR OpenSCEP .
+
+.SH AUTHOR
+Andreas F. Mueller <andreas.mueller@othello.ch>
+

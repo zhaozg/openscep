@@ -1,0 +1,140 @@
+<html>
+<head>
+<title>Welcome to OpenSCEP</title>
+</head>
+<body bgcolor="#ffffff">
+<h1>Welcome to OpenSCEP</h1>
+<p>
+This is OpenSCEP version VeRsIoN. See the <a href="NEWS">NEWS</a>
+file for information about things that have changed, or the
+<a href="ChangeLog">ChangeLog</a> for the complete history.
+</p>
+<h2>What it is</h2>
+<p>
+<a href="http://openscep.othello.ch">OpenSCEP</a> is an open source
+implementation of the SCEP protocol used by
+Cisco routers for certificate enrollment to build VPNs.
+It implements most of the
+<a href="draft-nourse-scep-05.txt">draft specification</a>,
+include as reference in the distribution.
+</p>
+<p>
+OpenSCEP includes a client and a server implementation, as well
+as some CGI programs to simplify certificate and revocation list
+management. The OpenSCEP website
+<a href="http://openscep.othello.ch">http://openscep.othello.ch</a>
+is at the same time a working installation of OpenSCEP, you can thus
+try OpenSCEP without having to install it first.
+</p>
+<p>
+There also is a mailing list about OpenSCEP. To subscribe, send a
+message to <a href="majordomo@lists.othello.ch">majordomo@lists.othello.ch</a>
+with the strings <tt>subscribe openscep</tt> in the body.
+You must be a list member to post to the list, this seems to be
+a necessary precaution in todays crazy Internet.
+</p>
+
+<h2>Prerequisites</h2>
+<p>
+OpenSCEP uses <a href="http://www.openssl.org" target="_top">OpenSSL</a>'s
+crypto library, extended by some functions
+specific to SCEP (version 0.9.6 was used for development and is the
+only tested version so far).
+</p>
+<p>
+As SCEP is based on HTTP, it principally consists
+in some CGI programs plus some tools for certificate management.
+The installations known to me all use an
+<a href="http://httpd.apache.org" target="_top">Apache server</a>, although
+no particular functions from apache are used.
+It is expected that just about any HTTP server capable of executing
+CGI programs can be used for OpenSCEP.
+</p>
+<p>
+As it is expected that a SCEP server also allows clients to find
+its certificate revokation list in an LDAP directory, OpenSCEP
+expects to find an <a href="http://www.openldap.org" target="_top">OpenLDAP</a>
+server (tested: 2.0.7) to store client
+definitions, certificates and CRLs.
+However, Cisco routers currently are unable to retrieve CRLs from a sensible
+location of an LDAP directory (they expect to find them in the root node),
+so this feature will only be useful when Cisco finally fixes their
+IOS code.
+</p>
+
+<h2>Related Software</h2>
+<p>
+Certificates issued by OpenSCEP are stored in the directory in a form
+so that they can be directly used by
+<a href="http://www.othello.ch/software/mod_authz_ldap.html">mod_authz_ldap</a>
+the LDAP certificate authorization module for the apache web server.
+</p>
+<p>
+OpenSCEP was mainly tested with <a href="http://www.cisco.com">Cisco</a>
+Routers.
+An non-free embeddable PKI toolkit implementing SCEP client
+functionality is available from
+<a href="http://security.dstc.com/products/upki">http://security.dstc.com/products/upki</a>, 
+but there seems to be an interoperability problem, which has not quite been
+been sorted out yet as of version 0.3.8 of OpenSCEP.
+</p>
+
+<h2>Problems</h2>
+<p>
+The code that deals with user certificates (not the
+<code>unstructuredName</code> type distinguished names) is not
+completely tested (Udo Woehler contributed fixes, but I'm not
+sure I applied everything correctly).
+However, this should not be a problem for applications
+involving Cisco routers.
+</p>
+<p>
+There were some problems with Cisco's IOS. Thanks to a surprising
+(to me, that is) offer for help from Cisco, these are now being fixed.
+</p>
+
+<h2>License and Download</h2>
+<p>
+OpenSCEP is available under the terms of the
+<a href="COPYING">GNU General Public License GPL</a>. It can be
+downloaded from
+<a href="http://openscep.othello.ch/download/openscep-VeRsIoN.tar.gz">http://openscep.othello.ch/download/openscep-VeRsIoN.tar.gz</a>
+(310kB). 
+</p>
+<p>
+For easier installation on Solaris systems, a binary package is
+provided in <a href="http://openscep.othello.ch/OpenSCEP-VeRsIoN.tar.gz">http://openscep.othello.ch/OpenSCEP-VeRsIoN.tar.gz</a> (2615kB),
+but as producing these packages takes some time, the package is usually
+a few releases behind, and there aren't any binaries for some of the
+more shortlived releases.
+Note that the package will only work, if you have packages perl,
+OpenLDAP and OpenSSL on the default paths set by their respective
+configuration scripts. If you haven't, you will need to build OpenSCEP
+from source.
+Packages on <a href="http://www.sunfreeware.com/">http://www.sunfreeware.com/</a>
+usually are available in
+a version that installs into /usr/local, which should be ok OpenSCEP.
+</p>
+
+<h2>Thanks</h2>
+<p>
+Support by a sponsor
+in the form of router hardware for tests and financing during the initial
+phases of the project were instrumental in bringing this project to live.
+They also opened a channel to Cisco technical support, although so far
+information has only flown from OpenSCEP to Cisco in the form of
+bug reports.
+</p>
+<p>
+To learn to use OpenSSL and for some help in understanding the 
+SCEP specification, reading the source code of the SCEP implementation
+of the <a href="http://www.openosp.org" target="_top">OpenOSP</a> project were
+very helpful, although not directly usable as the SCEP part of OpenOSP
+is rather minimal (only unauthenticated automatic enrollment).
+</p>
+
+<hr />
+&copy; 2001 The OpenSCEP Project<br />
+<i>$Id: welcome.html.in,v 1.17 2002/02/15 21:23:54 afm Exp $</i>
+</body>
+</html>

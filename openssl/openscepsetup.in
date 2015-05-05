@@ -1,0 +1,135 @@
+#! /bin/sh
+#
+# openscepsetup.sh -- set up a CA suitable for OpenSCEP
+#
+# (c) 2001 Dr. Andreas Mueller, Beratung und Entwicklung
+#
+# $Id: openscepsetup.in,v 1.4 2001/04/04 23:36:37 afm Exp $
+#
+set -- `getopt f "$@"`
+
+for i in $*
+do
+	case $i in
+	-f)	force=1; shift;;
+	--)	shift; break;
+	esac
+done
+
+openscepdir=OPENSCEPDIR
+caowner=CAOWNER
+cagroup=CAGROUP
+
+# does the configuration directory exists?
+if [ ! -d ${openscepdir} ]
+then
+	mkdir ${openscepdir}
+	chmod +t ${openscepdir}
+	chown ${caowner} ${openscepdir}
+	chgrp ${cagroup} ${openscepdir}
+fi
+
+# does the configuration file exists? 
+if [ ! -r ${openscepdir}/openscep.cnf ]
+then
+	echo configuration file ${openscepdir}/openscep.cnf does not exist >&2
+	if [ -r ${openscepdir}/openscep.cnf.dist ]
+	then
+		echo creating default configuration file, please edit...
+		cp ${openscepdir}/openscep.cnf.dist $openscepdir/openscep.cnf
+	else
+		echo probably forgot to \'make install\'
+		exit 1
+	fi
+fi
+
+scepconf=BINDIR/scepconf
+if [ ! -x ${scepconf} ]
+then
+	echo Installation problem: scepconf binary not found at configured >&2
+	echo location ${scepconf}. Cannot continue. >&2
+	exit 1
+fi
+openssl=`${scepconf} scepd openssl`
+if [ ! -x "${openssl}" ]
+then
+	echo "It looks as if the path to the OpenSSL binary is not" >&2
+	echo "configured correctly. Please verify that the openssl" >&2
+	echo "variable in the scepd section of the OpenSCEP configuration" >&2
+	echo "file ${openscepdir}/openscep.cnf points to the correct" >&2
+	echo "binary (default /usr/local/ssl/bin/openssl), and run" >&2
+	echo "openscepsetup again." >&2
+	exit 1
+fi
+
+
+# generate a random seed file
+${openssl} rand -rand /etc/passwd:/etc/hosts:/etc/services:/etc/inetd.conf \
+	-out ${openscepdir}/.rnd 1024
+
+# make sure all the directories exist
+for d in certs granted pending rejected newcerts revoked
+do
+	if [ ! -d ${openscepdir}/${d} ]
+	then
+		mkdir ${openscepdir}/${d}
+		chown ${caowner} ${openscepdir}/${d}
+		chgrp ${cagroup} ${openscepdir}/${d}
+	fi
+done
+
+# if cacert and cakey exist, stop at this point
+if [ -r ${openscepdir}/cacert.pem -o -r ${openscepdir}/cakey.pem ]
+then
+	if [ -z "${force}" ]
+	then
+		echo certificates exist, remove or use -f flag >&2
+		exit 1
+	else
+		echo overwriting certificates
+	fi
+fi
+rm -f ${openscepdir}/serial
+> ${openscepdir}/index.txt
+chown ${caowner} ${openscepdir}/index.txt
+chgrp ${cagroup} ${openscepdir}/index.txt
+
+trap "rm -f ${openscepdir}/cacert0.pem ${openscepdir}/careq.pem" 0 1 2 15
+
+# create ca certificate
+# 1. create a request, due to the option -nodes, the key will not be
+#    encrypted
+${openssl} req -new -newkey rsa:1024 					\
+	-config ${openscepdir}/openscep.cnf 				\
+	-out ${openscepdir}/careq.pem -keyout ${openscepdir}/cakey.pem 	\
+	-nodes
+
+# 2. create a temporary self signed certificate
+${openssl} x509 -req -in ${openscepdir}/careq.pem 			\
+	-signkey ${openscepdir}/cakey.pem 				\
+	-extfile ${openscepdir}/openscep.cnf -extensions v3_ca 		\
+	-out ${openscepdir}/cacert0.pem
+
+# 3. create final self signed certificate
+${openssl} x509 -req -in ${openscepdir}/careq.pem			\
+	-CAkey ${openscepdir}/cakey.pem -CA ${openscepdir}/cacert0.pem	\
+	-CAserial ${openscepdir}/serial -CAcreateserial			\
+	-extfile ${openscepdir}/openscep.cnf -extensions v3_ca		\
+	-days 3652 -out ${openscepdir}/cacert.pem
+${openssl} x509 -in ${openscepdir}/cacert.pem 				\
+	-out ${openscepdir}/cacert.der -outform DER
+
+
+# create an empty crl
+${openssl} ca -config ${openscepdir}/openscep.cnf -gencrl		\
+	-crldays 10 							\
+	-cert ${openscepdir}/cacert.pem 				\
+	-keyfile ${openscepdir}/cakey.pem				\
+	-out ${openscepdir}/crl.pem
+${openssl} crl -in ${openscepdir}/crl.pem 				\
+	-out ${openscepdir}/crl.der -outform DER
+chown ${caowner} ${openscepdir}/crl.*
+chgrp ${cagroup} ${openscepdir}/crl.*
+
+# that's it
+exit 0

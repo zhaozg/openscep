@@ -1,0 +1,59 @@
+<html>
+<head>
+<title>Certificate Revocation in OpenSCEP</title>
+</head>
+<body bgcolor="#ffffff">
+<h1>Certificate Revocation in OpenSCEP</h1>
+<p>
+OpenSCEP includes a web form to revoke certificates. But since this
+is a highly sensitive operation, proper consideration for the scecurity
+issues involved should be given.
+</p>
+<p>
+First it is important to note that X.509 does not specifiy how revocation
+should be done, only the result of the revocation, the certificate
+revocation list is specified. There are however two possible ways to
+authenticate the requestor of a certificate revocation:
+</p>
+<ol>
+<li>
+The authentication is done independently of the certificates, or
+by some other technique outside of the control of the certificates
+or requests themselves. E.g. one could write access lists to the
+certificate notes stored in the LDAP directory and allow revocation
+for a user exactly when she has write access to such a node.
+</li>
+<li>
+During the request phase, an optional challenge password can be
+specified. This password is used for automatic enrollment, if enabled,
+and is normally stored in the LDAP backend. A revocation request
+could be authenticated by asking for the challenge password again,
+and granting it only if the password matches. As in an SCEP environment
+it can be assumed that the if challenge password is publicized, the
+key has also been compromised, nothing is lost.
+</li>
+</ol>
+<p>
+OpenSCEP implements these two cases. In the first case, the OpenSCEP
+CGI programs expect the surrounding web server to perform the authentication
+of the user. As an Apache server has a plethora of authentication methods,
+this gives quite some flexibility. However, if a basic authentication 
+method is used, the connections should be protected from eavesdroppers
+using SSL.
+</p>
+<p>
+OpenSCEP does not attribute different rights to different certificates,
+any administrator allowed to perform revocation without challenge password
+can revoke any certificate he likes. Trusted administrators must be
+defined in the crlusers configuration variable in openscep.cnf.
+</p>
+<p>
+In the second case, any user having access to the web server can revoke
+any certificate of which she knows the challenge password. The challenge
+password is verified against the directory.
+</p>
+<hr />
+&copy; 2001 The OpenSCEP Project<br />
+<i>$Id: revocation.html,v 1.1 2001/05/16 23:18:48 afm Exp $</i>
+</body>
+</html>

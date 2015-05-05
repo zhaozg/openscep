@@ -1,0 +1,196 @@
+dnl
+dnl Autoconfiguration Script
+dnl
+dnl (c) 2001 Dr. Andreas Mueller, Beratung und Entwicklung
+dnl
+dnl $Id: configure.in,v 1.23 2002/02/25 23:08:39 afm Exp $
+dnl
+AC_PREREQ(2.12)dnl
+AC_REVISION([1.0])dnl
+
+dnl autoconf initialization
+AC_INIT(README)
+AC_CANONICAL_SYSTEM
+AM_INIT_AUTOMAKE(openscep, 0.4.2)
+AM_CONFIG_HEADER(include/config.h)
+
+dnl check for some fundamental programs
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_PATH_PROG(MV, mv)
+AC_SUBST(MV)
+
+dnl some options
+
+dnl CGI programs are referenced from a web server under the CGIDIR
+dnl (which makes it easier to password protect them), but are installed
+dnl under the CGIINSTALLDIR
+CGIDIR=/cgi-bin/openscep
+AC_ARG_WITH(cgi-dir,
+	[  --with-cgi-dir          url path to the CGI scripts],
+	CGIDIR=${with_cgi_dir})
+AC_SUBST(CGIDIR)
+
+CGIINSTALLDIR=/usr/local/apache/cgi-bin/openscep
+AC_ARG_WITH(cgi-install-dir,
+	[  --with-cgi-install-dir  install path of the CGI scripts],
+	CGIINSTALLDIR=${with_cgi_install_dir})
+AC_SUBST(CGIINSTALLDIR)
+
+dnl where ldap commands are installed
+AC_PATH_PROG(LDAPSEARCHCMD, ldapsearch)
+AC_SUBST(LDAPSEARCHCMD)
+AC_PATH_PROG(LDAPMODIFYCMD, ldapsearch)
+AC_SUBST(LDAPMODIFYCMD)
+
+dnl where OpenSSL is installed
+OPENSSLDIR=/usr/local/ssl
+AC_ARG_WITH(openssl-dir,
+	[  --with-openssl-dir      where openssl has been installed],
+	OPENSSLDIR=${with_openssl_dir})
+INCLUDES="-I${OPENSSLDIR}/include"
+AC_SUBST(OPENSSLDIR)
+
+dnl look for the openssl program
+PATH=${PATH}:${OPENSSLDIR}/bin
+export PATH
+AC_PATH_PROG(OPENSSLCMD, openssl)
+AC_SUBST(OPENSSLCMD)
+
+dnl HTML pages are referenced from a web server under HTMLDIR, but are
+dnl installed unter the HTMLINSTALLDIR
+HTMLDIR=/
+AC_ARG_WITH(html-dir,
+	[  --with-html-dir         the path component of the URL to OpenSCEP],
+	HTMLDIR=${with_html_dir})
+AC_SUBST(HTMLDIR)
+
+HTMLINSTALLDIR=/usr/local/apache/htdocs
+AC_ARG_WITH(html-install-dir,
+	[  --with-html-install-dir where HTML pages should be install],
+	HTMLINSTALLDIR=${with_html_install_dir})
+AC_SUBST(HTMLINSTALLDIR)
+
+dnl directory where OpenSCEP is to be installed
+OPENSCEPDIR="${libdir}/openscep"
+AC_ARG_WITH(openscep-dir,
+	[  --with-openscep-dir     where openscep has its working directories],
+	OPENSCEPDIR=${with_openscep_dir})
+AC_SUBST(OPENSCEPDIR)
+
+dnl LOG facility to use for syslog
+LOG_FACILITY=LOG_LOCAL7
+AC_ARG_WITH(log-facility,
+	[  --with-log-facility     log facility to use],
+	LOG_FACILIY=${with_log_facility})
+AC_SUBST(LOG_FACILTY)
+
+dnl name of pkiclient.exe 
+PKICLIENTEXE=`dirname ${CGIINSTALLDIR}`/pkiclient.exe
+AC_ARG_WITH(pkiclientexe,
+	[  --with-pkiclientexe     full path name of pkiclient.exe program],
+	PKICLIENTEXE=${with_pkiclientexe})
+AC_SUBST(PKICLIENTEXE)
+
+dnl owner of the CA directory and files
+CAOWNER=nobody
+AC_ARG_WITH(caowner,
+	[  --with-caowner          owner of the CA directories],
+	CAOWNER=${with_caowner})
+AC_SUBST(CAOWNER)
+
+dnl group of the CA directory and files
+CAGROUP=nogroup
+AC_ARG_WITH(cagroup,
+	[  --with-cagroup          group of the CA directories],
+	CAGROUP=${with_cagroup})
+AC_SUBST(CAGROUP)
+
+dnl with group
+GROUP=staff
+AC_ARG_WITH(group,
+	[  --with-group            group owning the files],
+	GROUP=${with_group})
+AC_SUBST(GROUP)
+
+dnl with user
+USER=root
+AC_ARG_WITH(user,
+	[  --with-user             user owning the files],
+	USER=${with_user})
+AC_SUBST(USER)
+
+dnl check for libraries
+AC_CHECK_LIB(nsl, gethostbyname)
+AC_CHECK_LIB(socket, socket)
+AC_CHECK_LIB(resolv, res_query)
+dnl this is the right position for the crypto libraries if, ldap was compiled
+dnl with TLS
+LIBS="-L${OPENSSLDIR}/lib -lssl -lcrypto ${LIBS}"
+AC_CHECK_LIB(lber, ber_init, ber_lib=-llber)
+if test -z "${ber_lib}"
+then
+	AC_MSG_ERROR(no BER library found)
+fi
+LIBS="${ber_lib} ${LIBS}"
+AC_CHECK_LIB(ldap, ldap_init, ldap_lib=-lldap)
+if test -z "${ldap_lib}"
+then
+	AC_MSG_ERROR(no LDAP library found)
+fi
+LIBS="${LDFLAGS} ${ldap_lib} ${LIBS}"
+
+dnl Checks for programs.
+AC_PATH_PROG(DATE, date)
+AC_PATH_PROG(PKGMK, pkgmk)
+AC_PATH_PROG(RPM, rpm)
+if test -n "${PKGMK}"
+then
+	PKG=package
+else
+	if test -n "${RPM}"
+	then
+		PKG=rpm
+	fi
+fi
+AC_SUBST(PKG)
+AC_PATH_PROG(PERL, perl)
+AC_SUBST(PERL)
+
+dnl does the C library define the altzone variable?
+AC_MSG_CHECKING("whether we have the altzone global variable")
+AC_TRY_LINK([#include <time.h>
+extern time_t altzone;], { altzone = 0; }, ac_try_altzone=1, ac_try_altzone=0)
+if test "${ac_try_altzone}" = 1
+then
+	AC_MSG_RESULT(yes)
+	AC_DEFINE(HAVE_ALTZONE, 1)
+else
+	AC_MSG_RESULT(no)
+fi
+
+dnl add support for libtool
+AC_LIBLTDL_CONVENIENCE
+AC_SUBST(INCLTDL)
+AC_SUBST(LIBLTDL)
+AC_LIBTOOL_DLOPEN
+AC_SUBST(LIBTOOL_DEPS)
+AM_PROG_LIBTOOL
+AC_CONFIG_SUBDIRS(libltdl)
+
+dnl Checks for libraries.
+AC_CHECK_LIB(dl, dlopen)
+
+dnl Checks for header files.
+AC_HEADER_STDC
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_BIGENDIAN
+
+dnl Checks for library functions.
+AC_CHECK_FUNCS(strdup)
+
+AC_OUTPUT(Makefile include/Makefile lib/Makefile scep/Makefile 		\
+scepd/Makefile cgi-bin/Makefile ldap/Makefile openssl/Makefile 		\
+doc/Makefile html/Makefile man/Makefile package/Makefile 		\
+rpm/Makefile config.sh)

@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>OpenSCEP Contents</title>
+</head>
+<body bgcolor="#ddddff" leftmargin="0">
+<a href="CGIDIR/pending.pl" target="main"><img src="requests.gif"
+	alt="Requests" border="0"></a>
+<a href="CGIDIR/granted.pl" target="main"><img src="granted.gif"
+	alt="Granted" border="0"></a>
+<a href="CGIDIR/rejected.pl" target="main"><img src="rejected.gif"
+	alt="Rejected" border="0"></a>
+<a href="CGIDIR/revoked.pl" target="main"><img src="revoked.gif"
+	alt="Revoked" border="0"></a>
+<a href="CGIDIR/add.pl" target="main"><img src="add.gif"
+	alt="Add" border="0"></a>
+<a href="CGIDIR/crl.pl" target="main"><img src="crl.gif"
+	alt="CRL" border="0"></a>
+<a href="CGIDIR/log.pl" target="main"><img src="log.gif"
+	alt="Log" border="0"></a>
+<a href="help.html" target="main"><img src="help.gif"
+	alt="Help" border="0"></a>
+</body>
+</html>

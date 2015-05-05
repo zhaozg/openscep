@@ -1,0 +1,42 @@
+#
+# openscep.schema -- LDAP schema definitions used for OpenSCEP
+#
+# (c) 2001 Dr. Andreas Mueller, Beratung und Entwicklung
+#
+# $Id: openscep.schema,v 1.2 2001/03/05 00:17:55 afm Exp $
+#
+
+# unstructuredName is defined in X.509 and used in SCEP, but seems to be
+# unknown in the standard LDAP schemata, but behaves as the other common
+# name attributes
+attributetype ( 1.2.840.113549.1.9.2 NAME 'unstructuredName' SUP name )
+
+# The following attribute types are special to SCEP clients. A scep client
+# becomes a strong authentication user as soon as it has a userCertificate,
+# and it will loose this information when the certificate is revoked, but
+# to simplify the operation of the scep server, serial number, issuer DN
+# and subject DN are stored as well in the directory. This is somewhat
+# similar to mod_authz_ldap, but there only the minimum is stored in the
+# directory. Care is taken that object IDs and definitions are identical
+# to those found in mod_authz_ldap. If you already installed mod_authz_ldap,
+# you should comment out the following two types, as they are redundant.
+
+attributetype ( 1.3.6.1.4.1.4263.5.1 NAME 'issuerDN'
+	DESC 'The user friendly version of the distinguished name of the issuer of a certificate'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.4263.5.2 NAME 'subjectDN'
+	DESC 'The user friendly version of the distinguished name of the subject of a certificate'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 SINGLE-VALUE )
+
+# the sCEPClient object class contains all the attributes possibly found
+# in an entry for the SCEP client. The presence of a userPassword attribute
+# means that the certificate for this entity can be granted in automatic 
+# mode
+objectclass ( 1.3.6.1.4.1.4263.5.4 NAME 'sCEPClient'
+	DESC 'SCEP client definition'
+	SUP top AUXILIARY
+	MAY ( unstructuredName $ issuerDN $ subjectDN $ serialNumber $
+		userCertificate $ c $ o $ ou $ l $ st $ mail $ userPassword ) )

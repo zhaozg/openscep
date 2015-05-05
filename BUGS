@@ -1,0 +1,17 @@
+Probably many. In particular, some things are simply missing, consult
+the TODO file for details.
+
+- when a router is added which includes IP-address and serial number
+  in the distinguished name, the CA should create the whole path of
+  nodes in the LDAP directory. This is currently not done and the
+  request will fail
+
+- interoperability problem not sorted out yet with the uPKI toolkit
+
+- reissuing a certificate with the same DN but a new private key does
+  not work completely
+
+- make install does not correctly install all the documentation
+
+--
+$Id: BUGS,v 1.6 2002/02/19 23:40:03 afm Exp $

@@ -1,0 +1,35 @@
+#! /bin/ssh
+#
+# setup an LDAP directory in the openscep directory
+#
+# (c) 2001 Dr. Andreas Mueller, Beratung und Entwicklung
+#
+# $Id: setupldap.in,v 1.2 2002/01/11 08:22:44 afm Exp $
+#
+LDBMFILES="dn2id.dbb id2entry.dbb nextid.dbb objectClass.dbb"
+# kill the server, if already running
+if [ -r OPENSCEPDIR/ldbm/slapd.pid ]
+then
+	kill `cat OPENSCEPDIR/ldbm/slapd.pid` >/dev/null 2>&1
+fi
+
+# clean out the ldap database directory
+if [ ! -d OPENSCEPDIR/ldbm ]
+then
+	mkdir OPENSCEPDIR/ldbm
+fi
+for f in ${LDBMFILES}
+do
+	rm -f OPENSCEPDIR/ldbm/${f}
+done
+
+# add data to the directory
+slapadd -v -f OPENSCEPDIR/slapd.conf -l base.ldif || \
+	{ echo cannot add base nodes >&2; exit 1; }
+slapadd -v -f OPENSCEPDIR/slapd.conf -l openscep.ldif || \
+	{ echo cannot add ca nodes >&2; exit 1; }
+
+# start the server
+/usr/local/libexec/slapd -h ldap://localhost:3889 -f OPENSCEPDIR/slapd.conf
+
+exit 0

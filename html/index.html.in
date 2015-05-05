@@ -1,0 +1,12 @@
+<html>
+<head>
+<title>OpenSCEP</title>
+</head>
+<frameset rows="100,*" frameborder="no" border="0">
+	<frame name="title" src="title.html">
+	<frameset cols="100,*" frameborder="no" border="0">
+		<frame name="contents" src="contents.html" scrolling="no">
+		<frame name="main" src="welcome.html">
+	</frameset>
+</frameset>
+</html>

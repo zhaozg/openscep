@@ -1,0 +1,47 @@
+.TH crl2ldap 8 "DaTe" "OpenSCEP"
+.SH NAME
+crl2ldap \- save a certificate revocation list in an LDAP directory
+.SH SYNOPSIS
+.B crl2ldap
+[
+.B \-d
+] [
+.BI \-D binddn
+] [
+.BI \-w bindpassword
+] [
+.BI \-h ldaphost
+] [
+.BI \-p ldapport
+]
+.I distinguished-name
+.SH DESCRIPTION
+.B Crl2ldap
+reads a certificate revocation list from standard input
+(it doesn't really care whether it in fact is a CRL)
+and stores it in the 
+.I certificateRevocationList
+attribute of the specified distinguished name
+.IR distinguished-name .
+
+.SH OPTIONS
+.TP
+.B \-d 
+increase the debug level by one.
+.TP
+.BI \-D binddn
+.TP
+.BI \-w bindpassword
+.TP
+.BI \-h ldaphost
+.TP
+.BI \-p ldapport
+
+.SH VERSION
+This page documents
+.B crl2ldap
+as it appears in version VeRsIoN of OpenSCEP.
+
+.SH AUTHOR
+Andreas F. Mueller <andreas.mueller@othello.ch>
+

@@ -1,0 +1,253 @@
+Setting up OpenSCEP
+===================
+
+This file contains setup instructions for OpenSCEP. There are the following
+main tasks to set up OpenSCEP after the package has been built and installed:
+
+0. Configure OpenSCEP
+
+1. Create the CA
+
+2. Prepare the LDAP directory to work with OpenSCEP
+
+3. Convince the web server to cooperate with OpenSCEP
+
+If you follow these steps, you should get a working SCEP server fairly
+easily. Please note that there are some differences when installing from
+a binary package please see section 4 below.
+
+0. Configure OpenSCEP
+---------------------
+
+OpenSCEP is configured through the configuration file openscep.cnf in
+the OPENSCEPDIR. Please consult the OpenSSL documentation for information
+about the format of this file, and for most of the options. Only the 
+sections [scepd] and [ldap] are OpenSCEP specific, and the options
+available in these sections are documented in the openscep.cnf man
+page.
+
+
+1. Create the Certificate Authority
+-----------------------------------
+
+OpenSCEP maintains its own Certificate Authority in the directory
+configured with the --with-openscep-dir configuration parameter.
+Initial setup of this directory and generation of a suitable CA
+certificate is most easily done with the `openscepsetup' script provided
+in the openssl subdirectory of the distribution. Note that installation
+of the package will create the directory and install a dummy openscep.cnf
+file, but will not populate the directory. The dummy configuration file
+contains the default path /usr/local/ssl/bin/openssl to the OpenSSL
+application program. If your installation has this program in some
+other location (like some package installations, that place it in
+/usr/local/bin), you should adapt the variable in scepd section of
+the configuration file. If `openscepsetup' does not find an executable
+binary at the location specified in the configuration file, it will exit
+and ask the user to rerun the setup script. The script `openscepsetup'
+will then do the following
+
+    - create all the necessary directories:
+	${openscepdir}/pending
+	${openscepdir}/granted
+	${openscepdir}/rejected
+	${openscepdir}/newcerts
+	${openscepdir}/certs
+
+    - create a random seed file .rnd for the openssl utilities in 
+      the openscep directory. Note that the quality of this random seed
+      file is quite weak, and you should try to create a better seed
+      from some more random files of your platform.
+
+    - prepare the files for the OpenSSL CA in this directory, e.g. the
+      serial file and the index.txt certificate database
+
+    - create a CA private key and certificate, named cakey.pem and 
+      cacert.{pem,der} in the openscep directory.
+
+Note that all directories have the access rights of the persion installing
+OpenSCEP, normally root, but many of the directories must later be writable
+by the user running the webserver. In particular, the cakey.pem file must
+be readable for the webserver user. The pending directory must be
+writable for the webserver user. Other directories may even need to be 
+writable by the webserver user:
+
+	directory	need to be writable by web server
+	---------	---------------------------------
+	/pending	always
+	/.rnd		always
+	/granted	if automatic enrollment is active or
+			if the web interface is used to grant requests
+	/rejected	if the web interface is used to reject requests
+
+	/newcerts	)
+	/index.txt	( same conditions as for the /granted directory
+	/serial		)
+
+The openscepsetup script tries to get these things right, but running
+any of the scripts as the wrong user will usually mess up the permissions.
+
+If only the scripts scepgrant and scepreject are used to grant or reject
+requests, the directories /granted, /rejected and /newcerts as well as
+the files index.txt and serial must be writable by the user running those
+scripts.
+
+Note further that the CA key is not encrypted, i.e. you have to use
+file system permissions to protect the CA privated key. It may therefore
+be advisable to have a separate instance of a webserver running with its
+own userid as the OpenSCEP server.
+
+
+2. Prepare LDAP directory
+-------------------------
+
+OpenSCEP can automatically grant certificates to clients that can
+authenticate themselves using the challenge password in the X.509
+certificate request. For this to work, the SCEP clients have first to
+be defined in the directory. Furthermore, OpenSCEP can store all the
+information gathered from the clients in the directory. It does so
+in a way compatible with mod_authz_ldap. Some new attribute types
+are needed for this purpose, and one new object type, the sCEPClient.
+The file openscep.schema provides these schema extensions in a form
+that can directly be used with OpenLDAP 2. See the OpenLDAP documentation
+for instructions how to include these schema extensions.
+
+Furthermore the LDAP server has to be populated with the basic nodes,
+and with a node representing the CA. The openscep.ldif file may be
+helpful to add these, but you will have to fix the distinguished names
+in this file to match your installation.
+
+If you previously installed mod_authz_ldap, you already added the
+attribute types issuerDN and subjectDN to your directory, so you will
+only need the unstructuredName attribute type and the sCEPClient
+object class.
+
+3. Web Server
+-------------
+
+The OpenSCEP directories configured must be reachable from the web server
+under the paths specified with the --with-html-dir and --with-cgi-dir.
+furthermore the main SCEP CGI program must be executable under the
+name pkiclient.exe (this is one of the more ridiculous parts of the
+protocol specification, which allows for an arbitrary path to this
+program, but then name of the program itself is hard coded into the
+specification). Either you allow the webserver to follow a symbolic link
+from pkiclient.exe to scep.pl or you create a copy of scep.pl under the
+name pkiclient.exe.
+
+You will want to protect the OpenSCEP directories in your web server
+with passwords, as sensitive information like challenge passwords is
+available to the user of these pages. A user may also create nodes
+ready for automatic enrollment, thus creating an oportunity to break
+into your VPN.
+
+Testing/Operation
+=================
+
+The core OpenSCEP programs can write all the ASN.1 structures the generate
+into temporary files, provided there is a directory to write it to.
+This directory is set to /var/tmp/openscep in init.c (so if you don't
+like this path, you can change it). If the directory exists, and is
+writable (it's easiest to just chmod 1777 /var/tmp/openscep), the scepd
+program will write all the intermediate structures into DER encoded
+files in that directory. If you leave this directory in the file system,
+you should run a cleaning script periodically.
+
+You should now be ready to test OpenSCEP. On a Cisco router, you should
+try the following
+
+ a) create RSA private keys with the command
+
+	crypto key generate rsa
+
+ b) define a CA using the commands
+
+	crypto ca identity openscep
+	 enrollment url http://your.openscep.host/cgi-bin/openscep
+	 crl optional
+
+ c) retrieve the CA certificate
+
+	crypto ca authenticate openscep
+
+    (the router then displays the fingerprint, but as it is somewhat
+    misterious how Cisco computes this fingerprint, it isn't of much
+    help).
+ d) Enroll, i.e. create a certificate request and send it to the SCEP
+    server with the command
+
+	crypto ca enroll openscep
+
+    you will be prompted wether you want to include IP address or
+    serial number in the distinguished name (say no to both, as this
+    has not been tested so far). You will also be asked for a challenge
+    password, which is only useful for automatic enrollment.
+ e) On the OpenSCEP requests page, grant the pending request, the 
+    router should then receive a certificate when it next polls the server
+    (which it does once a minute)
+ f) If you create a node beforehand from the OpenSCEP pages, you may be
+    able to automatically enroll a router if the challenge password matches
+    the userPassword attribute of the node.
+ 
+To test with the SCEP client that comes with OpenSCEP, you must first
+create a key pair for the SCEP client. You can then use the scepclient
+script to request a certificate with a given subject distinguished
+name. See the README file in the scep directory of the distribution for
+more information about how to create keys/requests. The Makefile in the
+same directory shows how to use the scep program for the various types of
+requests.
+
+Maintenance
+===========
+
+You will want to update the certifcate revocation list on a regular basis,
+which can be done with the updatecrl script run regularly from cron.
+Something like
+
+	0 0 * * *	/usr/local/sbin/createcrl
+
+should be good enough to rebuild the CRL every day.
+
+Binary Distribution
+===================
+
+To use the binary distribution, you must first install the prerequisite
+packages, i.e. OpenLDAP 2.0.7 or newer and OpenSSL 0.9.6 or newer.
+The binary distribution installs all files necessary for OpenSCEP
+on the system, but does not attempt to configure anything. However,
+it tries to get the access rights correct for the CA directories. After
+the package is installed, do the following:
+
+0. prepare OpenLDAP, in particular you should add the openscep.schema
+   file to the include section of your slapd.conf. Make sure the
+   definitions for issuerDN and subjectDN are not commented out, unless you
+   are using mod_authz_ldap, in which case you already have these 
+   definitions in authz_ldap.schema.
+
+1. Customize the openscep.cnf configuration file in /usr/local/lib/openscep,
+   in particular pay attention to the LDAP parameters and the defaults 
+   for distinguished names. Furthermore, the path to the openssl binary
+   must match your installation. We deliberately decided not to rely on
+   correct path settings for this program, as it is crucial for the
+   security of the system and most probably not on a standard path.
+   Furthermore, some installations of OpenSCEP use the specially patched
+   version of openssl, which they wish to use only for openscep. They
+   may prefer not to have it on any path.
+
+2. Create CA key, certificate and CRL. If you do this as the CA owner,
+   the access rights to the file should be right automatically.
+
+3. Import the CA data into the directory using the supplied LDIF file
+   /usr/local/lib/openscep/openscep.ldif. See the manual page of
+   ldapadd for the parameters you should use. Note that you must use
+   the ldapadd from the OpenLDAP distribution, other ldapadds may no
+   work, as they don't understand the URL syntax for included files.
+
+4. check the access rights to the directories and files in
+   /usr/local/lib/openscep so that the runtime user of the web server
+   can read the files, and write to all the directories, to index.txt and
+   serial, and to .rnd
+
+This should give you a working OpenSCEP setup.
+
+--
+$Id: SETUP,v 1.10 2002/02/19 23:40:04 afm Exp $

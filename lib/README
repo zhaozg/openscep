@@ -1,0 +1,4 @@
+This directory contains generic functions for the SCEP implementation,
+used in both client and server.
+
+$Id: README,v 1.2 2001/03/11 14:58:54 afm Exp $

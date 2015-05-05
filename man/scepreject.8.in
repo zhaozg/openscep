@@ -1,0 +1,28 @@
+.\"
+.\" $(#) $Id: scepreject.8.in,v 1.1 2001/03/04 22:31:21 afm Exp $
+.\"
+.TH SCEPREJECT 8 "DaTe" "OpenSCEP"
+.SH NAME
+scepreject \- reject a pending certificate to a SCEP client
+.SH SYNOPSYS
+.B scepreject
+.I transaction-id
+.SH DESCRIPTION
+.B Scepreject
+takes a request in the pending request queue of OpenSCEP
+identified by the transaction ID, signs it and puts it into
+the rejected queue.
+When the SCEP client next queries the SCEP server with a GetCertInitial
+request, 
+.B scepd
+will return a failure response, indicating to the client that the
+request was denied.
+.SH VERSION
+This page documents 
+.B scepreject
+as it appears in version VeRsIoN of OpenSCEP.
+.SH SEE ALSO
+.BR scepd (8),
+.BR scepgrant (8)
+.SH AUTHOR
+Andreas F. Mueller <andreas.mueller@othello.ch>

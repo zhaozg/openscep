@@ -1,0 +1,103 @@
+.TH sceplist 1 "02/24/02" "OpenSCEP"
+.SH NAME
+sceplist \- display SCEP requests of a given status
+.SH SYNOPSIS
+.B sceplists 
+[
+.I options
+]
+[
+.I from
+[
+.I to
+]
+]
+.SH DESCRIPTION
+.B Sceplist
+displays lists of SCEP requests of a given status either as
+plain text or as HTML. Sorting can be performed on various attributes
+of a request, and it is possible to only display a range of requests
+based on the same key.
+
+.SH OPTIONS
+.TP
+.B \-d 
+increase the debug level by one.
+.TP
+.BI \-h
+display the results of the query in HTML format instead of plain text.
+.TP
+.BI \-c
+display date strings in the usual
+BR ctime (3)
+format instead of the ASN1 time string.
+
+.SH REQUEST STATUS
+Requests of differnt status are lists depending on the following options:
+.TP
+.B \-p
+displays pending requests. This is the default, and the
+.B \-p
+flag can be omitted.
+.TP
+.B \-g
+lists granted requests, not including certificates that have been
+revoked in the mean time.
+.TP
+.B \-r
+lists rejected requests, i.e. requests the were sent in by clients, but
+lated denied a certificate by the CA operator.
+.TP
+.B \-v
+lists revoked requests.
+
+.SH SORTING
+.B Sceplist
+is capable of sorting on various attributes of requests and certificates,
+based on the following options
+
+.TP
+.B \-t
+use the transaction id as the sort key.
+.TP
+.B \-n
+use the subject distinguished named as the sort key.
+.TP
+.B \-b
+use the end validity time of the certificate as sort key
+(only for certificates and revoked certificates).
+.TP
+.B \-a
+use the beginning of validity of the certificate as sort key
+(only for certificates and revoked certificates).
+.TP
+.B \-s
+use the certificate serial number as sort key
+(only for certificates and revoked certificates).
+.TP
+.B \-x
+reverse the order of the sort.
+
+The optional arguments can indicate a range of requests. The selection
+key is the same as the sort key.
+
+.SH VERSION
+This page documents
+.B sceplist
+as it appears in version 0.4.1 of OpenSCEP.
+
+.SH BUGS
+The list of revoked certificates does currently not list the revocation
+date of a revoked certificate. It isn't possible to sort on the revocation
+date either
+
+Selection of a range based on serial number has not been implemented yet.
+
+.SH SEE ALSO
+.BR scepgrant (8),
+.BR scepreject (8),
+.BR openscep.cnf (5)
+
+.SH AUTHOR
+Andreas F. Mueller <andreas.mueller@othello.ch>
+

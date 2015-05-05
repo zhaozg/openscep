@@ -1,0 +1,169 @@
+Release 0.4.1:
+	* additional debugging in payload.c
+	* spurious proxy authentication failure message in proxy.c remvoved
+
+Release 0.4.0:
+	* added test targets in the scep/Makefile so that testing the
+	  various version 2 cases becomes simpler
+	* added configure code to also detect the correct paths for the
+	  openssl, ldapsearch and ldapmodify binaries
+	* added file pending which contains all the functions needed to 
+	  create pending requests read for the scepgrant script to sign
+	* added file transcheck, which simplifies the checks for the state of
+	  a transaction
+	* modified the scepgrant script to be able to also grant certificates
+	  for Netscape SPKAC requests
+	* added an Object identifier for the ProxyAuthenticator attribute
+	* made sure scepldap functions can work without a crash if no ldap
+	  is available (must still ensure certificate can be found from the
+	  file system in those cases)
+	* added file proxy.c with function proxy_check for community
+	  string verification in proxy requests
+	* added the proxycommunity configuration variable to the scepd section
+	* added two new request types 17: variable payload pkcsreq and
+	  18 proxyrequest
+	* rewrote {d2i,i2d}_PKCS7_ISSUER_AND_SERIAL_bio as macros as all
+	  the other such functions in OpenSSL are
+	* made configre detect the location of mv, and made sure the scripts
+	  that grant or reject a request use the path thus found and don't
+	  rely an mv being on the PATH (which happens not to be the case
+	  for certain CGI environments)
+	* fix some format errors in scepd.c
+	* fix some warnings
+
+Release 0.3.10:
+	* fixed a documentation bug: download directory link was wrong, and
+	  a disclaimer about binary packages needed to be added.
+
+Release 0.3.9:
+	* fixed some installation problems with file owner and group owner
+	  (forgot to do it right in 0.3.8).
+
+Release 0.3.8:
+	* added info about mailinglist to the documentation
+	* modified the logic to change the installation directory so that
+	  it actually works :-(
+	* make finger print checking optional (suggested by Udo Woehler), there
+	  is a new configuration variable in openscep.cnf to handle this
+	* make finger print comparision case insensitive (problem pointed
+	  out by Ives Steglich)
+	* Fix PATH in scepgrant, did not include /bin, which is essential
+	  on Linux
+	* Added a check for the altzone variable that must be set on solaris
+	  to get correct timestamps.
+	* Added patches by Peter Onion to make OpenSCEP interwork with the
+	  UniCERT CA.
+
+Release 0.3.7:
+	* add the possibility in scep.c to write the request data to a
+	  file for easier debugging
+	* fix nested extern in sceplist.c:103, and some minor warnings
+	  in cafingerprint.c
+	* fix a missing include in init.c (pointed out by Peter Onion and
+	  Ueli Rutishauser)
+	* fix a byte order problem in http.c (pointed out by Ueli Rutishauser)
+	* updated documentation to new version of the SCEP draft
+	* beefed up derdump so that it is also capable of decoding PEM data
+
+Release 0.3.6:
+	* added document about revocation authorization
+	* add a check in the revocation CGI program that checks for a user
+	  name, and only accepts unauthenticated revocations from a list
+	  of users
+	* update the README for release 0.3.6
+	* fix copyright on some dynamic pages
+
+Release 0.3.5:
+	* add cafinerprint to all scripts to include CA fingerprint as 
+	  reminder on dynamic pages
+	* add a cafingerprint program to enable display of CA key identifier
+	  on dynamic pages, includes manual pages in nroff and HTML form
+	* fix a HTML bug in title.html
+	* added an option to sceplist to display the date in human
+	  readable form instead of standard ASN1 format
+	* incorrect link in welcome.html.in
+	* Keep button did not belong to the same radio group, due to a 
+	  missing $transid in the pending.pl script
+
+Release 0.3.4:
+	* the request script was essentially nonfunctional
+	* pkiclient.exe script did not define scepconf -> core dump
+	* add.pl had syntax error
+	* request script for package installation had incorrect logic
+	  causing an infinite loop
+	* postinstall script should edit user and group in openscepsetup
+	  script
+
+Release 0.3.3:
+	* modify the documentation to point out that the path to the
+	  openssl binary must no be configured in the openscep binary
+	* make the path to the openssl binary a configurable option
+	  in the openscep configuration file
+	* fix two typos in the request script for the package installation
+	* fix the file scepxid.1.html missing from the Solaris package
+
+Release 0.3.2:
+	* allow the package installation to request the user/group of
+	  the CA directories from the administrator installing the package
+	* improved logging, fixed the log.pl CGI program to get the
+	  location of the log file from the configuration file
+	* scepd had insecure umask, bad for a CGI program
+	* add information about the /var/tmp/openscep directory for
+	  debugging, also added the directory to the Solaris package
+	* make sure the openscep conf directory has the sticky bit set
+	  in the package installation
+	* fix a typo in the sunfreeware link in welcome.html.in
+	* point out that the package is not usable on non UltraSPARC
+	  systems, due to instruction set incompatiblities; problem
+	  located in openssl libraries, not OpenSCEP. Will be better
+	  as soon as OpenSSL can be built with shared libraries.
+
+Release 0.3.1:
+	* package install was not quite perfect: many files were missing
+	  that are needed for a successful install
+	* modified install of package to include openscep.cnf.dist
+	  and openscepsetup to build a default configuration file from
+	  the distribution
+	* added manual pages for scepxid, createcrl, updatecrl
+	* added package build for OpenSCEP. The package installs in
+	  /usr/local, and assumes quite a few things about the location
+	  of perl, openssl and the ldap libraries. If these packages 
+	  were installed with defaults, there will be no problem.
+	* renamed the casetup.sh script to openscepsetup, which makes
+	  a name clash less likely, dito for transid -> sceptransid,
+	  dn2transid -> dn2xid
+	* added target attributes to external links on welcome page, fixed
+	  some typos
+	* add a link to the license on the welcome page
+
+Release 0.3.0:
+	* added the sceplist program, which can be used by CGI programs
+	  create lists of granted or rejected certificates
+	* added three new menu items to list granted, rejected and
+	  revoked certificates
+	* reverted certificate revokation to store the revoked certificates
+	  in a revoked directory, because otherwise sceplist does not
+	  know whether the item to read is a request or a certificate
+	* make sure HTML directories are created before documentation
+	  is installed there
+	* include an LDIF to build the base nodes in the directory
+	  in the distribution
+	* make sure the pkiclient programm is installed in the configured
+	  path, update documentation accordingly
+	* let configure figure out the path to perl and include it in
+	  the CGI programs
+
+Release 0.2.2:
+	* dn2transid was missing the string.h header
+
+Release 0.2.1:
+	* file scepclient.in was missing in the distribution
+	* badreply.c contained a lot of obsolete code, now handled by
+	  encode
+
+Release 0.2:
+	* first public release, do you really want to know what I did
+	  to get to this point?
+
+--
+$Id: ChangeLog,v 1.29 2002/02/24 21:40:01 afm Exp $

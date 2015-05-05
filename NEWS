@@ -1,0 +1,27 @@
+News
+====
+
+Please subscribe to the mailing list by sending a message containing
+`subscribe openscep' to majordomo@lists.othello.ch
+
+Release 0.4.0 introduces two experimental extensions to the SCEP
+protocol devised by Ueli Rutishauser and Alain Schaefer:
+
+  1. SCEP can be used as a transport for requests other than PKCS#10,
+     e.g. it is possible to carry a Netscape SPKI request within
+     an PKCSReq message, but still retain the automatic enrollment
+     capability.
+
+  2. A SCEP client can work as a proxy for certificate requests. Such
+     a proxy must of course be authenticated in some way, a community
+     string is used for this purpose.
+
+For the time being, the source code is the only documentation of this
+extension. The authors have written a SCEP client library in Java and
+a SCEP proxy that uses both features to distribute certificates to 
+standard browsers. Their package will eventually be integrated in
+OpenSCEP, and a paper detailing the protocol extension and its
+implementation will appear shortly.
+
+--
+$Id: NEWS,v 1.9 2002/02/19 23:40:04 afm Exp $

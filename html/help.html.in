@@ -1,0 +1,40 @@
+<html>
+<head>
+<title>OpenSCEP Help</title>
+</head>
+<body bgcolor="#ffffff">
+<h1>OpenSCEP Documentation</h1>
+<p>
+OpenSCEP documentation can be accessed from this index:
+</p>
+<ul>
+<li>The Internet draft specification
+<a href="draft-nourse-scep-05.txt">draft-nourse-scep-04.txt</a>.</li>
+<li>The <a href="README">README</a> for the distribution,
+<a href="INSTALL">installation</a> (the INSTALL file) and
+<a href="SETUP">setup</a> (the SETUP file) help.</li>
+<li>Some information about the strategies used to
+authorize <a href="revocation.html">revocation</a> requests.
+<li>Manual pages for 
+<ol>
+<li><a href="scep.1.html"><b>scep</b>(1)</a>,</li>
+<li><a href="scepclient.1.html"><b>scepclient</b>(1)</a>,</li>
+<li><a href="scepxid.1.html"><b>scepxid</b>(1)</a>,</li>
+<li><a href="sceplist.1.html"><b>sceplist</b>(1)</a>,</li>
+<li><a href="scepd.8.html"><b>scepd</b>(8)</a>,</li>
+<li><a href="scepgrant.8.html"><b>scepgrant</b>(8)</a>,</li>
+<li><a href="scepreject.8.html"><b>scepreject</b>(8)</a></li>
+<li><a href="createcrl.8.html"><b>createcrl</b>(8)</a></li>
+<li><a href="updatecrl.8.html"><b>updatecrl</b>(8)</a></li>
+<li><a href="crl2ldap.8.html"><b>crl2ldap</b>(8)</a></li>
+<li><a href="dn2xid.8.html"><b>dn2xid</b>(8)</a></li>
+<li><a href="cafingerprint.8.html"><b>cafingerprint</b>(8)</a></li>
+</ol>
+<li><a href="ChangeLog">Recent changes (ChangeLog)</a></li>
+and <a href="TODO">open issues (TODO)</a>.
+</ul>
+<hr />
+&copy; 2001 The OpenSCEP Project<br />
+<i>$Id: help.html.in,v 1.12 2002/01/11 08:22:42 afm Exp $</i>
+</body>
+</html>

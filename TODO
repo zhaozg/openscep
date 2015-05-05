@@ -1,0 +1,42 @@
+TODO list for OpenSCEP
+----------------------
+
+- implement and test automatic enrollment for version 2 requests
+
+- cannot handle case where man2html is missing
+
+- various checks before granting a certificate
+  . transId matches request hash (done)
+  . public key fingerprint (problem with Cisco bug [below])
+  . if the distinguished name has requested a certificate before, it
+    should match the key
+
+- fingerprint computation seems to be wrong, or starting from different ideas
+
+    Cisco's idea of the fingerprint
+	Certificate
+	  Subject Name Contains:
+	    Name: cisco2.othello.ch
+	  Status: Pending
+	  Key Usage: General Purpose
+	    Fingerprint:  2213C845 EFB9E9B6 945D0618 0B5E0B0C 00000000
+
+    Request fingerprint as computed according to the SCEP specification
+                          89D039AD FFA36FB6 DD6E9A23 67A8AAD7
+
+  This problem was sent to Cisco in the form of a bug report, but no
+  reply has been received so far.
+
+- bad return from handler should result in a failure response, not crash
+ 	partly done
+
+- check portability to freebsd
+
+- document directory hierarchy, utility programs
+
+- store the challenge password specified in the request as the user password
+  if no password has been provided before. This will allow for an automatic
+  but authenticated revoke by the owner of the certificate.
+
+--
+$Id: TODO,v 1.10 2002/02/19 23:40:04 afm Exp $

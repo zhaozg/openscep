@@ -1,0 +1,279 @@
+# Makefile.in generated automatically by automake 1.4-p5 from Makefile.am
+
+# Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+#
+# Makefile.am -- generate the Makefile for the HTML directory of the 
+#                OpenSCEP project
+#
+# (c) 2001 Dr. Andreas Mueller, Beratung und Entwicklung
+#
+# $Id: Makefile.am,v 1.6 2001/05/06 23:55:35 afm Exp $
+#
+
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+DESTDIR =
+
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = ..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+transform = @program_transform_name@
+
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+build_alias = @build_alias@
+build_triplet = @build@
+host_alias = @host_alias@
+host_triplet = @host@
+target_alias = @target_alias@
+target_triplet = @target@
+AS = @AS@
+CAGROUP = @CAGROUP@
+CAOWNER = @CAOWNER@
+CC = @CC@
+CGIDIR = @CGIDIR@
+CGIINSTALLDIR = @CGIINSTALLDIR@
+DATE = @DATE@
+DLLTOOL = @DLLTOOL@
+ECHO = @ECHO@
+EXEEXT = @EXEEXT@
+GROUP = @GROUP@
+HTMLDIR = @HTMLDIR@
+INCLTDL = @INCLTDL@
+LDAPMODIFYCMD = @LDAPMODIFYCMD@
+LDAPSEARCHCMD = @LDAPSEARCHCMD@
+LIBLTDL = @LIBLTDL@
+LIBTOOL = @LIBTOOL@
+LIBTOOL_DEPS = @LIBTOOL_DEPS@
+LN_S = @LN_S@
+LOG_FACILTY = @LOG_FACILTY@
+MAKEINFO = @MAKEINFO@
+MV = @MV@
+OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
+OPENSCEPDIR = @OPENSCEPDIR@
+OPENSSLCMD = @OPENSSLCMD@
+OPENSSLDIR = @OPENSSLDIR@
+PACKAGE = @PACKAGE@
+PERL = @PERL@
+PKG = @PKG@
+PKGMK = @PKGMK@
+PKICLIENTEXE = @PKICLIENTEXE@
+RANLIB = @RANLIB@
+RPM = @RPM@
+STRIP = @STRIP@
+USER = @USER@
+VERSION = @VERSION@
+
+IMAGES = openscep.png openscep.gif requests.gif crl.gif help.gif 		add.gif log.gif granted.gif rejected.gif revoked.gif
+
+PAGES = index.html welcome.html contents.html help.html title.html
+INPAGES = $(PAGES:.html=.html.in)
+MANPAGES = crl2ldap.8.html derdump.1.html dn2xid.8.html 			openscep.cnf.5.html scep.1.html scepclient.1.html 			scepconf.1.html scepd.8.html scepgrant.8.html sceplist.1.html		scepreject.8.html scepxid.1.html updatecrl.8.html			createcrl.8.html cafingerprint.8.html
+
+EXTRA_DIST = $(INPAGES) $(IMAGES) $(MANPAGES) man2html.sh
+
+HTMLINSTALLDIR = @HTMLINSTALLDIR@
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_HEADER = ../include/config.h
+CONFIG_CLEAN_FILES = 
+DIST_COMMON =  Makefile.am Makefile.in
+
+
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+
+TAR = tar
+GZIP_ENV = --best
+all: all-redirect
+.SUFFIXES:
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --gnu --include-deps html/Makefile
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+tags: TAGS
+TAGS:
+
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+subdir = html
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
+	done
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
+check-am: all-am
+check: check-am
+installcheck-am:
+installcheck: installcheck-am
+install-exec-am:
+install-exec: install-exec-am
+
+install-data-am: install-data-local
+install-data: install-data-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-am
+uninstall-am:
+uninstall: uninstall-am
+all-am: Makefile all-local
+all-redirect: all-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
+installdirs:
+
+
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES)
+	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+mostlyclean-am:  mostlyclean-generic
+
+mostlyclean: mostlyclean-am
+
+clean-am:  clean-generic mostlyclean-am
+
+clean: clean-am
+
+distclean-am:  distclean-generic clean-am
+	-rm -f libtool
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-generic distclean-am
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+maintainer-clean: maintainer-clean-am
+
+.PHONY: tags distdir info-am info dvi-am dvi check check-am \
+installcheck-am installcheck install-exec-am install-exec \
+install-data-local install-data-am install-data install-am install \
+uninstall-am uninstall all-local all-redirect all-am all installdirs \
+mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
+
+all-local: $(PAGES) $(MANPAGES)
+
+index.html:	index.html.in ../config.sh
+	sh ../config.sh <index.html.in >index.html
+
+welcome.html:	welcome.html.in ../config.sh
+	sh ../config.sh <welcome.html.in >welcome.html
+
+help.html:	help.html.in ../config.sh
+	sh ../config.sh <help.html.in >help.html
+
+contents.html:	contents.html.in ../config.sh
+	sh ../config.sh <contents.html.in >contents.html
+
+title.html:	title.html.in ../config.sh
+	sh ../config.sh <title.html.in >title.html
+
+install-data-local:	$(PAGES) $(IMAGES)
+	if [ ! -d $(HTMLINSTALLDIR) ]; then mkdir -p $(HTMLINSTALLDIR); fi
+	cp $(PAGES) $(IMAGES) $(MANPAGES) $(HTMLINSTALLDIR)
+
+#
+# HTML forms of the manual pages are distributed with the package, and
+# are built from the manual sources in the man directory
+#
+crl2ldap.8.html:	../man/crl2ldap.8
+	sh man2html.sh $< $@
+derdump.1.html:	../man/derdump.1
+	sh man2html.sh $< $@
+dn2xid.8.html:	../man/dn2xid.8
+	sh man2html.sh $< $@
+openscep.cnf.5.html:	../man/openscep.cnf.5
+	sh man2html.sh $< $@
+scep.1.html:	../man/scep.1
+	sh man2html.sh $< $@
+scepclient.1.html:	../man/scepclient.1
+	sh man2html.sh $< $@
+scepconf.1.html:	../man/scepconf.1
+	sh man2html.sh $< $@
+scepd.8.html:	../man/scepd.8
+	sh man2html.sh $< $@
+scepgrant.8.html:	../man/scepgrant.8
+	sh man2html.sh $< $@
+sceplist.1.html:	../man/sceplist.1
+	sh man2html.sh $< $@
+scepreject.8.html:	../man/scepreject.8
+	sh man2html.sh $< $@
+scepxid.1.html:	../man/scepxid.1
+	sh man2html.sh $< $@
+updatecrl.8.html: ../man/updatecrl.8
+	sh man2html.sh $< $@
+createcrl.8.html: ../man/createcrl.8
+	sh man2html.sh $< $@
+cafingerprint.8.html: ../man/cafingerprint.8
+	sh man2html.sh $< $@
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

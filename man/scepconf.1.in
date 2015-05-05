@@ -1,0 +1,49 @@
+.\"
+.\" $(#) $Id: scepconf.1.in,v 1.1 2001/03/04 22:31:21 afm Exp $
+.\"
+.TH SCEPCONF 8 "DaTe" "OpenSCEP"
+.SH NAME
+scepconf \- read configuration parameters of OpenSCEP
+.SH SYNOPSYS
+.B scepconf
+[
+.B \-d
+]
+[
+.BI \-f configfile
+]
+[
+.I section
+]
+.I variable
+.SH DESCRIPTION
+.B Scepconf
+reads the Openscep configuration file 
+and returns the value of the variable named
+.I variable
+in section
+.IR section ,
+if the latter is specified.
+.B Scepconf 
+is intended for the use in scripts, which thus use the same configuration
+file as the binary files of OpenSCEP.
+.SH OPTIONS
+.TP
+.B \-d
+increase the debug level by one (although this may not really be useful
+in this particular case).
+.TP
+.BI \-f configfile
+use 
+.I configfile
+instead of
+.I OPENSCEPDIR/openscep.cnf
+to read configuration information from.
+.SH VERSION
+This page documents 
+.B scepconf
+as it appears in version VeRsIoN of OpenSCEP.
+.SH SEE ALSO
+.BR openscep.cnf (5)
+.SH AUTHOR
+Andreas F. Mueller <andreas.mueller@othello.ch>

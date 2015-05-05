@@ -1,0 +1,135 @@
+#! /bin/sh
+#
+# scepgrant -- grant a given certificate
+#
+# (c) 2001 Dr. Andreas Mueller, Beratung und Entwicklung
+#
+# $Id: scepgrant.in,v 1.6 2002/02/19 23:40:08 afm Exp $
+#
+
+# configuration variables set by the configure process
+openscepdir=OPENSCEPDIR
+scepconf=BINDIR/scepconf
+openssl=`${scepconf} scepd openssl`
+mv=MV
+
+# Environment
+unset LD_LIBRARY_PATH
+export LD_LIBRARY_PATH
+PATH=/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin:/usr/local/sbin:
+export PATH
+
+# some useful variables
+if [ $# -ne 1 ]
+then
+	echo "transid argument missing" >&2
+	exit 1
+fi
+transid=${1}
+
+# request
+request=${openscepdir}/pending/${transid}.der
+newrequest=${openscepdir}/granted/${transid}.req
+spki=${openscepdir}/pending/${transid}.spki
+newspki=${openscepdir}/granted/${transid}.spki
+info=${openscepdir}/pending/${transid}.info
+
+# certificate
+certificate=${openscepdir}/granted/${transid}.der
+certificateinfo=${openscepdir}/granted/${transid}.info
+cacert=${openscepdir}/cacert.pem
+capkey=${openscepdir}/cakey.pem
+
+tmprequest=/var/tmp/request.$$
+tmpcert=/var/tmp/cert.$$
+
+#trap "rm -f ${tmprequest} ${tmpcert}" 0 1 2 15
+
+# either a request file or a spki file must exist, but certainly not
+# both of them
+if [ ! -r ${request} -a ! -r ${spki} ]
+then
+	echo "neither X509 request nor SPKI exist" >&2
+	exit 1
+fi
+if [ -r ${request} -a -r ${spki} ]
+then
+	echo "X509 request and SPKI both exist, this cannot happen" >&2
+	exit 1
+fi
+
+# read the subject name from the info file, to find out whether the
+# unstructured policy is approriate
+if [ ! -r ${info} ]
+then
+	echo "info file does not exist" >&2
+	exit 1
+fi
+if grep subject ${info} | grep 'unstructuredName=' >/dev/null
+then
+	policy=policy_unstructured
+else
+	policy=policy_user
+fi
+
+# If a request file exists, we use the ordinary openssl CA function to
+# sign the request and thus create a certificate. The only gotcha here
+# is that openssl ca expects the request in PEM format.
+if [ -r ${request} ]
+then
+	# convert the DER request to PEM format
+	${openssl} req -config ${openscepdir}/openscep.cnf		\
+		-in ${request} -inform DER -out ${tmprequest}
+	rc=$?
+	if [ ${rc} -gt 0 ]
+	then
+		echo conversion of request to PEM failed >&2
+		exit 1
+	fi
+
+	# sign the request
+	${openssl} ca -config ${openscepdir}/openscep.cnf		\
+		-policy ${policy}	 				\
+		-in ${tmprequest} -out ${tmpcert} 			\
+		-keyfile ${capkey} -cert ${cacert}			\
+		-batch
+	rc=$?
+	if [ ${rc} -gt 0 ]
+	then
+		echo granting certificate failed >&2
+		exit 1
+	fi
+
+	# convert the new certificate from PEM to DER
+	${openssl} x509 -in ${tmpcert} -out ${certificate} -outform DER
+	if [ ${rc} -gt 0 ]
+	then
+		echo cannot certificate to DER >&2
+		exit 1
+	fi
+fi
+
+# If there is SPKI file, we must use the -spkac option to the openssl ca
+# to sign the request
+if [ -r ${spki} ]
+then
+	${openssl} ca -config ${openscepdir}/openscep.cnf		\
+		-policy ${policy} -batch				\
+		-spkac ${spki} -out ${tmpcert}				\
+		-keyfile ${capkey} -cert ${cacert}
+	rc=$?
+	if [ ${rc} -gt 0 ]
+	then
+		echo granting certificate failed >&2
+		exit 1
+	fi
+	${mv} ${tmpcert} ${certificate}
+fi
+
+
+# clean out the queue
+${mv} -f ${info} ${certificateinfo}
+[ -r ${request} ] && ${mv} -f ${request} ${newrequest}
+[ -r ${spki} ] && ${mv} -f ${spki} ${newspki}
+
+exit 0

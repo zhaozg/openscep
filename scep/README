@@ -1,0 +1,37 @@
+This directory is supposed to contain a SCEP command line client.
+However, this particular client doesn't do anything right now.
+
+scep		a SCEP client implementation, does only one request at
+		a time
+
+scep_client	(missing) a full client implementation, handles polling
+		until a certificate or a failure is returned
+
+createkey	auxiliary script to create a private key
+
+The scep program is capable of generating requests in three different
+formats: classical SCEP request, version 2 request with PKCS#10 payload
+and version 2 request with SPKAC payoad. The Makefile contains targets
+to generate just such requests, and uses the following data:
+
+test1	classical SCEP request, generated from test1.key and test1.req
+
+	A suitable key and request can be created with the commands
+
+	   openssl genrsa -out test1.key
+	   openssl req -key test1.key -new -days 30 -out test1.req \
+		-outform DER -config /usr/local/openscep/openscep.cnf
+
+test2	version2 request, with scep client key test1.key and test client
+	request test1.req (for the public key?), PKCS#10 payload
+	test2.req
+
+	   openssl genrsa -out test2.key
+	   openssl req -key test2.key -new -days 30 -out test2.req \
+		-outform DER -config /usr/local/openscep/penscep.cnf
+
+test3	version2 request with scep client key test1.key and test client
+	request test1.req, and SPKAC payload test3.spkc
+
+--
+$Id: README,v 1.3 2002/02/19 23:40:07 afm Exp $

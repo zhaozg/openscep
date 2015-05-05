@@ -1,0 +1,31 @@
+Author:
+
+	Dr. Andreas Mueller		afm@othello.ch
+	Beratung und Entwicklung
+	Bubental 53
+	CH-8852 Altendorf
+
+	Switzerland
+
+Contributors (their Email addresses are not listet to protect them from SPAM)
+
+	Thomas Manser		helped with the debugging of the package
+				installation, gave important feedback during
+				the initial phases of the project
+	Dean Povey		pointed out some interoperability problems
+				with the uPKI toolkit
+	Peter Onion		pointed out a fatal error in the scep client
+				program, and fixed many bugs. he also managed
+				to get it interwork with the UniCert CA
+	Ueli Rutishauser	found some bugs during his Linux porting
+				efforts
+	Ives Steglich		pointed out by case sensitivity problem with
+				the PIX 6 software
+	Udo Woehler		contributed some fixes for PIX and VPN
+				client (cgi programs and scep library)
+
+If I miss someone, it was certainly not intended, and please send email
+to afm@othello.ch, so I can fix the list.
+
+--
+$Id: AUTHORS,v 1.4 2002/01/11 08:22:39 afm Exp $

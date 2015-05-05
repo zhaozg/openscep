@@ -1,0 +1,143 @@
+.\"
+.\" $(#) $Id: scep.1.in,v 1.2 2001/12/17 09:40:04 afm Exp $
+.\"
+.TH SCEP 8 "DaTe" "OpenSCEP"
+.SH NAME
+scep \- request a certificate from a SCEP server
+.SH SYNOPSYS
+.B scep 
+[
+.I options
+] [
+.I distinguished-name
+]
+.SH DESCRIPTION
+.B Scep
+queries a SCEP server for a client certificate, and returns a certificate
+it it is ready.
+.B Scep
+works in two different modes, depending on its options: the first
+call requests a certificate through a PCSKReq message,
+and if no certificate was obtained, but
+a pending reply, subsequent calls try the retrieve the certificate
+using a SCEP GetCertInitial message.
+A full scep client implementation will thus use 
+.B scep
+in a loop to perform all the steps required by the SCEP protocol.
+This can easily be done in from a script, which is what the
+.BR scepclient (1)
+script does.
+
+When the first
+call is made to the SCEP server, the options
+.BR \-c ,
+.BR \-r ,
+.B \-k 
+and
+.B \-u
+must be specified as they are needed to create the request.
+In addition, a 
+.I distinguished-name
+argument
+(in LDAP like format) is required, 
+.B scep
+will take it appart and construct an X.509 distinguished name
+from it.
+The option
+.B \-w
+for the challenge password is optional, and is only required for 
+automatic enrollment.
+If the file specified with the
+.B \-r
+option exists, it will be used, so to create a new request, an existing file
+should be deleted first.
+The server may or may not return a certificate with its reply.
+If a filename is specified with the
+.B \-s
+argument, it is used to save the request.
+
+In the latter case, the client has received a pending reply from
+the server, the client has to poll the server for the certificate
+until it is either denied or returned.
+For these secondary calls, the option
+.B \-p
+should be specified to indicate to 
+.B scep
+that the request has already been generated. In this mode, the options
+.BR \-c ,
+.BR \-r ,
+.B \-k
+and
+.B \-u
+must be specified.
+The 
+.B \-s
+option specifies a saved certificate request that can be reused later.
+The distinguished name argument is not necessary, as it will be read
+from the request.
+
+.SH OPTIONS
+.TP
+.B \-d
+increase the debug level by one (although this may not really be useful
+in this particular case).
+.TP
+.BI \-c cacertificate
+specifies 
+.I cacertificate 
+as the file containing the certificate of the certification
+authority we want our request to sign.
+.TP
+.BI \-r request
+specifies the file to contain the request. Note that the first
+call to scep generates the request from the private key
+specified with the
+.B \-k
+option and the distinguished name on the command line.
+.TP
+.BI \-k keyfile
+The file 
+.I keyfile
+contains the private key of the user in PEM format.
+.TP
+.BI \-w challenge
+specifies the challenge password to include in the options of the
+generated request. Note that this is only necessary in the first
+request, when the request file does not exist yet. Later requests
+for the certificate do no longer need the challenge password.
+.TP
+.B \-p
+directs 
+.B scep
+to poll the server for a the certificate. This is only needed if the first
+request provokes a `pending' reply.
+.TP
+.BI \-u url
+Defines the URL to contact for SCEP requests. This will normally be
+something like
+
+http://openscep.othello.ch/cgi-bin
+
+Note that the SCEP specification fixes the name of the CGI-program to 
+.I pkiclient.exe
+which seems to be unnecessary restrictive.
+.SH RETURN CODE
+.B Scep
+distinguishes the result of his queries by the return code.
+If the certificate is returned, it is written as PEM on standard output,
+and 0 is returned.
+If the request failed, and did not return a certificate, or even a
+pending reply, 1 is returned. Return code 2 indicates that a pending
+reply was received, and that 
+.B scep
+should be called again with the 
+.B \-p
+option to query the server again.
+.SH VERSION
+This page documents 
+.B scepconf
+as it appears in version VeRsIoN of OpenSCEP.
+.SH SEE ALSO
+.BR scepclient (1)
+.SH AUTHOR
+Andreas F. Mueller <andreas.mueller@othello.ch>

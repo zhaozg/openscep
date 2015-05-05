@@ -1,0 +1,64 @@
+#! PERL
+#
+# log.pl CGI-Script extracts the last few lines from the SCEP log and
+# displays them to the user
+#
+# (c) 2001 Dr. Andreas Mueller, Beratung und Entwicklung
+#
+# $Id: log.pl.in,v 1.6 2001/05/16 23:18:47 afm Exp $
+#
+$bindir = "BINDIR";
+$scepconf = $bindir."/scepconf";
+
+# read through the openscep.cnf configuration file and extrat ldap parameters
+sub	scepconf {
+	local($cmd) = "${scepconf} ". join(' ', @_)." 2>/dev/null |";
+	open(CONF, $cmd) || die "cannot open scepconf: $!\n";
+	$value = <CONF>;
+	chop $value;
+	close(CONF);
+	return $value;
+}
+$logfile = &scepconf("scepd", "logfile");
+
+use CGI qw(param);
+
+if (($lines = param("lines")) <= 0) {
+	$lines = 50;
+}
+
+printf("Content-Type: text/html\n\n");
+
+printf q(
+<html>
+<head>
+<title>OpenSCEP Log</title>
+</head>
+<body bgcolor="#ffffff">
+<h1>OpenSCEP Log</h1>
+);
+if ($logfile eq "") {
+	printf("<p>log file not configured</p></body></html>\n");
+	exit(0);
+}
+
+printf("<table><tr bgcolor=\"#ddddff\"><td><pre>\n\n");
+$cmd = sprintf("/usr/bin/tail -%d %s|", $lines, $logfile);
+if (open(LOG, $cmd)) { while ($_ = <LOG>) {
+	print $_;
+}};
+printf("</pre></td></tr></table>\n");
+
+printf("<form action=\"log.pl\" method=\"post\">\n");
+printf("<input type=\"submit\" value=\"Retrieve\">\n");
+printf("last <input type=\"text\" name=\"lines\" value=\"%d\" size=\"3\"> lines of log\n",
+$lines);
+printf("</form>\n");
+
+printf q(
+<hr />
+&copy; 2001 The OpenSCEP Project
+</body>
+</html>
+);
+exit 0;

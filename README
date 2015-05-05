@@ -1,0 +1,67 @@
+  ___                   ____   ____ _____ ____        ___  _  _    ____  
+ / _ \ _ __   ___ _ __ / ___| / ___| ____|  _ \      / _ \| || |  |___ \ 
+| | | | '_ \ / _ \ '_ \\___ \| |   |  _| | |_) |____| | | | || |_   __) |
+| |_| | |_) |  __/ | | |___) | |___| |___|  __/_____| |_| |__   _| / __/ 
+ \___/| .__/ \___|_| |_|____/ \____|_____|_|         \___(_) |_|(_)_____|
+      |_|                                                                
+
+OpenSCEP is an open source implementation of the Simple Certificate
+Enrollment Protocol SCEP used e.g. by Cisco routers to build a VPN
+based on PKI technology.
+
+What is SCEP?
+=============
+
+The protocol is documented in a recently expired internet draft
+which for the convenience of the reader has been include in the
+distribution in the doc directory. It basically works by sending a
+PKCS#7 encrypted and signed certificate request to a CGI program
+on an HTTP server, which then either returns a certificate, denies
+it or puts it in a queue of pending requests. In the latter case
+the client will poll the server until it either times out or receives
+a certificate or is denied a certificate.
+
+It is also possible to automatically issue a certificate if the
+requesting user can be authenticated in an LDAP directory. The
+protocol protects the password used to authenticate the user by
+encrypting the certificate request. OpenSCEP will store the certificate
+of the user automatically in the directory in this case.
+
+Installation
+============
+
+This package is configured and built using the normal configure;
+make; make install cycle you may be familiar with. However, to build
+successfully, the following prerequisite packages need to be installed:
+
+  - openssl-2.0.7, note that other versions will work also, but are not
+    currently supported. In particular the schema extensions needed for
+    automatic enrollment are only documented in the form needed by
+    openldap 2. Other LDAP servers may work as well, but have not
+    been tested.
+
+  - openssl-0.9.6, note that a patch should be applied if you wish
+    crl distribution points to work (this patch is from openosp, and
+    the status is not quite clear). The patch can be found in the openssl
+    subdirectory of the distribution.
+
+  - Apache, probably almost any version will do. Other servers have not
+    been tested, but any server able to run CGI programs should do.
+
+  - Perl must be installed on the system. No special modules are required
+    though.
+
+For Solaris, there is a binary package available. However, this package
+was built with default settings on an UltraSPARC system, so the OpenSSL
+libraries require the SPARC V8+ instruction set. They will not work on
+systems only supporting the plain V8 instruction set, like the web server
+openscep.othello.ch.
+
+Configuration
+=============
+
+Setting up OpenSCEP is described in detail in the file SETUP in the
+top level distribution directory.
+
+--
+$Id: README,v 1.13 2002/02/25 23:03:13 afm Exp $

@@ -1,0 +1,27 @@
+.\"
+.\" $(#) $Id: scepgrant.8.in,v 1.1 2001/03/04 22:31:21 afm Exp $
+.\"
+.TH SCEPGRANT 8 "02/24/02" "OpenSCEP"
+.SH NAME
+scepgrant \- grant a pending certificate to a SCEP client
+.SH SYNOPSYS
+.B scepgrant
+.I transaction-id
+.SH DESCRIPTION
+.B Scepgrant
+takes a request in the pending request queue of OpenSCEP
+identified by the transaction ID, signs it and puts it into
+the granted queue.
+This will allow 
+.B scepd
+to return the certificate to the SCEP client when and if the
+client queries it next.
+.SH VERSION
+This page documents 
+.B scepgrant
+as it appears in version 0.4.1 of OpenSCEP.
+.SH SEE ALSO
+.BR scepd (8),
+.BR scepreject (8)
+.SH AUTHOR
+Andreas F. Mueller <andreas.mueller@othello.ch>

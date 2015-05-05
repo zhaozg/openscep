@@ -1,0 +1,12 @@
+PKG="OpenSCEP"
+NAME="OpenSCEP VeRsIoN"
+ARCH=sun4
+VERSION=VeRsIoN
+DESC="Free implementation of simple certificate enrollment protocol SCEP"
+VENDOR="Dr. Andreas Mueller, Beratung und Entwicklung"
+EMAIL="afm@othello.ch"
+CATEGORY=application
+CLASSES=none
+BASDIR=/
+PSTAMP=981231
+MAXINST=1000000

@@ -1,0 +1,5 @@
+This directory contains files useful to build openscep as an RPM package
+It SHOULD contain a spec file, but this has not been written yet
+
+--
+$Id: README,v 1.2 2001/10/30 13:54:49 afm Exp $

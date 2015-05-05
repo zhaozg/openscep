@@ -1,0 +1,14 @@
+<html>
+<head>
+<!--
+	HTML title of the OpenSCEP page
+	$Id: title.html.in,v 1.4 2001/05/06 23:55:35 afm Exp $
+-->
+<title>OpenSCEP</title>
+</head>
+<body bgcolor="#ddddff">
+<center>
+<a href="welcome.html" target="main"><img src="openscep.gif" border="0"></a>
+</center>
+</body>
+</html>

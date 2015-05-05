@@ -1,0 +1,451 @@
+# Makefile.in generated automatically by automake 1.4-p5 from Makefile.am
+
+# Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+#
+# Makefile for the scep library
+#
+# (c) 2001 Dr. Andreas Mueller, Beratung und Entwicklung
+#
+# $Id: Makefile.am,v 1.8 2002/02/19 23:40:05 afm Exp $
+#
+
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+DESTDIR =
+
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = ..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+transform = @program_transform_name@
+
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+build_alias = @build_alias@
+build_triplet = @build@
+host_alias = @host_alias@
+host_triplet = @host@
+target_alias = @target_alias@
+target_triplet = @target@
+AS = @AS@
+CAGROUP = @CAGROUP@
+CAOWNER = @CAOWNER@
+CC = @CC@
+CGIDIR = @CGIDIR@
+CGIINSTALLDIR = @CGIINSTALLDIR@
+DATE = @DATE@
+DLLTOOL = @DLLTOOL@
+ECHO = @ECHO@
+EXEEXT = @EXEEXT@
+GROUP = @GROUP@
+HTMLDIR = @HTMLDIR@
+HTMLINSTALLDIR = @HTMLINSTALLDIR@
+INCLTDL = @INCLTDL@
+LDAPMODIFYCMD = @LDAPMODIFYCMD@
+LDAPSEARCHCMD = @LDAPSEARCHCMD@
+LIBLTDL = @LIBLTDL@
+LIBTOOL = @LIBTOOL@
+LIBTOOL_DEPS = @LIBTOOL_DEPS@
+LN_S = @LN_S@
+LOG_FACILTY = @LOG_FACILTY@
+MAKEINFO = @MAKEINFO@
+MV = @MV@
+OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
+OPENSSLCMD = @OPENSSLCMD@
+PACKAGE = @PACKAGE@
+PERL = @PERL@
+PKG = @PKG@
+PKGMK = @PKGMK@
+PKICLIENTEXE = @PKICLIENTEXE@
+RANLIB = @RANLIB@
+RPM = @RPM@
+STRIP = @STRIP@
+USER = @USER@
+VERSION = @VERSION@
+
+OPENSSLDIR = @OPENSSLDIR@
+OPENSCEPDIR = @OPENSCEPDIR@
+
+lib_LTLIBRARIES = libscep.la
+
+LDADD = libscep.la
+LDFLAGS = -R$(libdir) $(LIBS)
+CPPFLAGS = -DOPENSCEPDIR=\"$(OPENSCEPDIR)\"
+
+VERSION_FILE = openscep_vers.c
+
+libscep_la_LDFLAGS = -version-info `../shtool version -d libtool $(VERSION_FILE)`
+
+libscep_la_SOURCES = init.c isasu.c decode.c sigattr.c pkcsreq.c		certrep.c getcertinitial.c getcert.c getcrl.c badreply.c attr.c		goodreply.c encode.c check.c grant.c scepldap.c fingerprint.c		openscep_vers.c selfsigned.c createreq.c http.c iser.c proxy.c		payload.c v2request.c transcheck.c pending.c spki2file.c
+
+
+INCLUDES = $(INCLTDL) -I$(top_srcdir)/include -I$(OPENSSLDIR)/include
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_HEADER = ../include/config.h
+CONFIG_CLEAN_FILES = 
+LTLIBRARIES =  $(lib_LTLIBRARIES)
+
+
+DEFS = @DEFS@ -I. -I$(srcdir) -I../include
+LIBS = @LIBS@
+libscep_la_LIBADD = 
+libscep_la_OBJECTS =  init.lo isasu.lo decode.lo sigattr.lo pkcsreq.lo \
+certrep.lo getcertinitial.lo getcert.lo getcrl.lo badreply.lo attr.lo \
+goodreply.lo encode.lo check.lo grant.lo scepldap.lo fingerprint.lo \
+openscep_vers.lo selfsigned.lo createreq.lo http.lo iser.lo proxy.lo \
+payload.lo v2request.lo transcheck.lo pending.lo spki2file.lo
+CFLAGS = @CFLAGS@
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+DIST_COMMON =  README Makefile.am Makefile.in
+
+
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+
+TAR = tar
+GZIP_ENV = --best
+SOURCES = $(libscep_la_SOURCES)
+OBJECTS = $(libscep_la_OBJECTS)
+
+all: all-redirect
+.SUFFIXES:
+.SUFFIXES: .S .c .lo .o .obj .s
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --gnu --include-deps lib/Makefile
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+
+mostlyclean-libLTLIBRARIES:
+
+clean-libLTLIBRARIES:
+	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
+
+distclean-libLTLIBRARIES:
+
+maintainer-clean-libLTLIBRARIES:
+
+install-libLTLIBRARIES: $(lib_LTLIBRARIES)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  if test -f $$p; then \
+	    echo "$(LIBTOOL)  --mode=install $(INSTALL) $$p $(DESTDIR)$(libdir)/$$p"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL) $$p $(DESTDIR)$(libdir)/$$p; \
+	  else :; fi; \
+	done
+
+uninstall-libLTLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p; \
+	done
+
+.c.o:
+	$(COMPILE) -c $<
+
+# FIXME: We should only use cygpath when building on Windows,
+# and only if it is available.
+.c.obj:
+	$(COMPILE) -c `cygpath -w $<`
+
+.s.o:
+	$(COMPILE) -c $<
+
+.S.o:
+	$(COMPILE) -c $<
+
+mostlyclean-compile:
+	-rm -f *.o core *.core
+	-rm -f *.$(OBJEXT)
+
+clean-compile:
+
+distclean-compile:
+	-rm -f *.tab.c
+
+maintainer-clean-compile:
+
+.c.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.s.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.S.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+
+maintainer-clean-libtool:
+
+libscep.la: $(libscep_la_OBJECTS) $(libscep_la_DEPENDENCIES)
+	$(LINK) -rpath $(libdir) $(libscep_la_LDFLAGS) $(libscep_la_OBJECTS) $(libscep_la_LIBADD) $(LIBS)
+
+tags: TAGS
+
+ID: $(HEADERS) $(SOURCES) $(LISP)
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	here=`pwd` && cd $(srcdir) \
+	  && mkid -f$$here/ID $$unique $(LISP)
+
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
+	tags=; \
+	here=`pwd`; \
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
+	       END { for (i in files) print i; }'`; \
+	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
+	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
+
+mostlyclean-tags:
+
+clean-tags:
+
+distclean-tags:
+	-rm -f TAGS ID
+
+maintainer-clean-tags:
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+subdir = lib
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
+	done
+attr.lo attr.o : attr.c ../include/attr.h ../include/init.h \
+	../include/scep.h ../include/isasu.h ../include/payload.h
+badreply.lo badreply.o : badreply.c ../include/badreply.h \
+	../include/scep.h ../include/isasu.h ../include/payload.h \
+	../include/attr.h ../include/init.h
+certrep.lo certrep.o : certrep.c ../include/certrep.h ../include/scep.h \
+	../include/isasu.h ../include/payload.h
+check.lo check.o : check.c ../include/check.h ../include/scep.h \
+	../include/isasu.h ../include/payload.h ../include/init.h \
+	../include/scepldap.h
+createreq.lo createreq.o : createreq.c ../include/config.h \
+	../include/init.h ../include/scep.h ../include/isasu.h \
+	../include/payload.h ../include/createreq.h
+decode.lo decode.o : decode.c ../include/decode.h ../include/scep.h \
+	../include/isasu.h ../include/payload.h ../include/init.h \
+	../include/sigattr.h ../include/iser.h ../include/proxy.h
+encode.lo encode.o : encode.c ../include/encode.h ../include/scep.h \
+	../include/isasu.h ../include/payload.h ../include/init.h \
+	../include/attr.h ../include/iser.h ../include/proxy.h
+fingerprint.lo fingerprint.o : fingerprint.c ../include/fingerprint.h \
+	../include/init.h ../include/scep.h ../include/isasu.h \
+	../include/payload.h
+getcert.lo getcert.o : getcert.c ../include/config.h \
+	../include/getcert.h ../include/scep.h ../include/isasu.h \
+	../include/payload.h ../include/init.h ../include/scepldap.h \
+	../include/goodreply.h
+getcertinitial.lo getcertinitial.o : getcertinitial.c ../include/scep.h \
+	../include/isasu.h ../include/payload.h ../include/init.h \
+	../include/getcertinitial.h ../include/goodreply.h \
+	../include/badreply.h ../include/config.h
+getcrl.lo getcrl.o : getcrl.c ../include/getcrl.h ../include/scep.h \
+	../include/isasu.h ../include/payload.h ../include/init.h \
+	../include/encode.h
+goodreply.lo goodreply.o : goodreply.c ../include/config.h \
+	../include/goodreply.h ../include/scep.h ../include/isasu.h \
+	../include/payload.h ../include/badreply.h ../include/init.h \
+	../include/scepldap.h ../include/encode.h
+grant.lo grant.o : grant.c ../include/config.h ../include/grant.h \
+	../include/scep.h ../include/isasu.h ../include/payload.h \
+	../include/init.h
+http.lo http.o : http.c ../include/config.h ../include/http.h \
+	../include/scep.h ../include/isasu.h ../include/payload.h \
+	../include/init.h
+init.lo init.o : init.c ../include/init.h ../include/scep.h \
+	../include/isasu.h ../include/payload.h ../include/config.h \
+	../include/openscep_vers.h
+isasu.lo isasu.o : isasu.c ../include/isasu.h ../include/init.h \
+	../include/scep.h ../include/payload.h
+iser.lo iser.o : iser.c ../include/config.h ../include/iser.h \
+	../include/init.h ../include/scep.h ../include/isasu.h \
+	../include/payload.h
+openscep_vers.lo openscep_vers.o : openscep_vers.c openscep_vers.c
+payload.lo payload.o : payload.c ../include/payload.h ../include/init.h \
+	../include/scep.h ../include/isasu.h ../include/missl.h \
+	../include/scepldap.h
+pending.lo pending.o : pending.c ../include/pending.h ../include/scep.h \
+	../include/isasu.h ../include/payload.h ../include/init.h \
+	../include/missl.h
+pkcsreq.lo pkcsreq.o : pkcsreq.c ../include/config.h ../include/init.h \
+	../include/scep.h ../include/isasu.h ../include/payload.h \
+	../include/pkcsreq.h ../include/fingerprint.h \
+	../include/goodreply.h ../include/badreply.h ../include/grant.h \
+	../include/check.h ../include/transcheck.h ../include/pending.h
+proxy.lo proxy.o : proxy.c ../include/init.h ../include/scep.h \
+	../include/isasu.h ../include/payload.h ../include/proxy.h
+scepldap.lo scepldap.o : scepldap.c ../include/config.h \
+	../include/scep.h ../include/isasu.h ../include/payload.h \
+	../include/scepldap.h ../include/init.h ../include/check.h
+selfsigned.lo selfsigned.o : selfsigned.c ../include/config.h \
+	../include/selfsigned.h ../include/scep.h ../include/isasu.h \
+	../include/payload.h ../include/init.h
+sigattr.lo sigattr.o : sigattr.c ../include/sigattr.h ../include/scep.h \
+	../include/isasu.h ../include/payload.h ../include/init.h
+spki2file.lo spki2file.o : spki2file.c ../include/spki2file.h \
+	../include/init.h ../include/scep.h ../include/isasu.h \
+	../include/payload.h ../include/http.h
+transcheck.lo transcheck.o : transcheck.c ../include/transcheck.h \
+	../include/scep.h ../include/isasu.h ../include/payload.h \
+	../include/config.h ../include/init.h
+v2request.lo v2request.o : v2request.c ../include/v2request.h \
+	../include/scep.h ../include/isasu.h ../include/payload.h \
+	../include/transcheck.h ../include/pending.h \
+	../include/goodreply.h ../include/badreply.h ../include/init.h
+
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
+check-am: all-am
+check: check-am
+installcheck-am:
+installcheck: installcheck-am
+install-exec-am: install-libLTLIBRARIES
+install-exec: install-exec-am
+
+install-data-am:
+install-data: install-data-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-am
+uninstall-am: uninstall-libLTLIBRARIES
+uninstall: uninstall-am
+all-am: Makefile $(LTLIBRARIES)
+all-redirect: all-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
+installdirs:
+	$(mkinstalldirs)  $(DESTDIR)$(libdir)
+
+
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES)
+	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+mostlyclean-am:  mostlyclean-libLTLIBRARIES mostlyclean-compile \
+		mostlyclean-libtool mostlyclean-tags \
+		mostlyclean-generic
+
+mostlyclean: mostlyclean-am
+
+clean-am:  clean-libLTLIBRARIES clean-compile clean-libtool clean-tags \
+		clean-generic mostlyclean-am
+
+clean: clean-am
+
+distclean-am:  distclean-libLTLIBRARIES distclean-compile \
+		distclean-libtool distclean-tags distclean-generic \
+		clean-am
+	-rm -f libtool
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-libLTLIBRARIES \
+		maintainer-clean-compile maintainer-clean-libtool \
+		maintainer-clean-tags maintainer-clean-generic \
+		distclean-am
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+maintainer-clean: maintainer-clean-am
+
+.PHONY: mostlyclean-libLTLIBRARIES distclean-libLTLIBRARIES \
+clean-libLTLIBRARIES maintainer-clean-libLTLIBRARIES \
+uninstall-libLTLIBRARIES install-libLTLIBRARIES mostlyclean-compile \
+distclean-compile clean-compile maintainer-clean-compile \
+mostlyclean-libtool distclean-libtool clean-libtool \
+maintainer-clean-libtool tags mostlyclean-tags distclean-tags \
+clean-tags maintainer-clean-tags distdir info-am info dvi-am dvi check \
+check-am installcheck-am installcheck install-exec-am install-exec \
+install-data-am install-data install-am install uninstall-am uninstall \
+all-redirect all-am all installdirs mostlyclean-generic \
+distclean-generic clean-generic maintainer-clean-generic clean \
+mostlyclean distclean maintainer-clean
+
+
+openscep_vers.c:	../configure.in
+	../shtool version -l c -s @VERSION@ -n OpenSCEP -p openscep_ 	\
+		openscep_vers.c
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:

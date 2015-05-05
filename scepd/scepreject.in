@@ -1,0 +1,38 @@
+#! /bin/sh
+#
+# scepreject -- reject a given certificate
+#
+# (c) 2001 Dr. Andreas Mueller, Beratung und Entwicklung
+#
+# $Id: scepreject.in,v 1.3 2002/02/19 23:40:08 afm Exp $
+#
+
+# command line arguments
+set -- `getopt p: "$@"`
+for i in $*
+do
+	case $i in
+		-p)	policy=${2}; shift 2;;
+		--)	shift; break;;
+	esac
+done
+if [ -z "${policy}" ]
+then
+	policy=policy_unstructured
+fi
+
+# configuration variables set by the configure process
+openscepdir=OPENSCEPDIR
+mv=MV
+
+# some useful variables
+transid=${1}
+# request
+request=${openscepdir}/pending/${transid}.der
+info=${openscepdir}/pending/${transid}.info
+
+# move the request files to the rejected directory
+${mv} ${request} ${openscepdir}/rejected
+${mv} ${info} ${openscepdir}/rejected
+
+exit 0

@@ -1,0 +1,86 @@
+#! /bin/sh
+#
+# scepclient -- perform queries to the scep server until a certificate
+#               or a failure response is returned, but no more than 10 times
+#
+# (c) 2001 Dr. Andreas Mueller, Beratung und Entwicklung
+#
+# $Id: scepclient.in,v 1.3 2001/04/04 23:36:39 afm Exp $
+#
+openscepdir=OPENSCEPDIR
+scepconf=BINDIR/scepconf
+openssl=`${scepconf} scepd openssl`
+scep=BINDIR/scep
+
+cacrt=${openscepdir}/cacert.pem
+
+count=0
+#
+# parse command line options
+#
+set -- `getopt k:c:w:r: "$@"`
+for i in "$@"
+do
+	case $i in
+	-k)	key="$2"; shift 2;;
+	-c)	cacrt="$2"; shift 2;;
+	-w)	pw="$2"; shift 2;;
+	--)	shift; break;;
+	esac
+done
+
+name=${1}
+shift
+key=`basename "${key}" .key`
+req="${key}".req
+crt="${key}".crt
+pkcs12="${key}".p12
+pwfile=${key}.pw
+key=${key}.key
+
+#
+# some attributes must be set or we cannot continue
+#
+if [ -z "${key}" -o -z "${cacrt}" -o -z "${name}" -o -z "${pw}" ]
+then
+	echo "$0: insufficient arguments" >&2
+	exit 1
+fi
+
+# convert a certificate and a private key into a pkcs12 file for easy import
+# into a browser
+cert2pkcs12 () {
+	echo "${pw}" >${pwfile}
+	${openssl} pkcs12 -in ${crt} -inkey ${key} -export		\
+		-out ${pkcs12} -passout file:${pwfile}
+	rm ${pwfile}
+}
+
+${scep} -d -k ${key} -c ${cacrt} -w "${pw}" -r ${req} "${name}" 	\
+	> ${crt}
+rc=$?
+while [ $count -lt 10 ]
+do
+	case $rc in
+	0)	# SUCCESS
+		if [ -n "${pkcs12}" ]
+		then
+			cert2pkcs12
+		fi
+		exit 0
+		;;
+	2)	# PENDING try again
+		sleep 5
+		;;
+	*)	# FAILURE
+		rm ${crt}
+		exit 1;
+		;;
+	esac
+	${scep} -d -p -k ${key} -c ${cacrt} -w "${pw}" -r ${req} 	\
+		"${name}" > ${cert}
+	rc=$?
+	count=`expr $count + 1`
+done
+
+exit 0

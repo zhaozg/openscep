@@ -1,0 +1,14 @@
+#! /bin/sh
+#
+# create an RSA public key pair for use with the SCEP client
+#
+# (c) 2001 Dr. Andreas Mueller, Beratung und Entwicklung
+#
+# $Id: scepkey.in,v 1.2 2001/04/04 23:36:39 afm Exp $
+#
+scepconf=BINDIR/scepconf
+openssl=`${scepconf} scepd openssl`
+${openssl} genrsa -out ${1} 1024
+${openssl} rsa -in ${1} -text
+
+exit 0
